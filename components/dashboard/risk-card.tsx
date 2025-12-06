@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { AlertTriangle, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import type { ComplianceGap } from "@/lib/types/compliance";
 
 interface RiskCardProps {
   title: string;
@@ -120,7 +121,35 @@ export function RiskCard({
   );
 }
 
-export function RiskCardsSection() {
+interface RiskCardsSectionProps {
+  gaps: ComplianceGap[];
+}
+
+export function RiskCardsSection({ gaps }: RiskCardsSectionProps) {
+  if (gaps.length === 0) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">
+              Detected Compliance Gaps
+            </h2>
+            <p className="text-sm text-gray-500">
+              Issues requiring immediate attention
+            </p>
+          </div>
+        </div>
+        <Card className="border-2 border-green-200 bg-green-50">
+          <CardContent className="p-6 text-center">
+            <p className="text-sm font-medium text-green-800">
+              ✅ No compliance gaps detected! All obligations are properly addressed.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -129,19 +158,22 @@ export function RiskCardsSection() {
             Detected Compliance Gaps
           </h2>
           <p className="text-sm text-gray-500">
-            Issues requiring immediate attention
+            {gaps.length} {gaps.length === 1 ? 'issue' : 'issues'} requiring attention
           </p>
         </div>
       </div>
 
-      <RiskCard
-        title="Anonymous Transfer Allowed"
-        detectedGap="The Global Transfer Feature v2 specification allows transactions without proper customer identification verification for amounts below RM 10,000. This creates a vulnerability for potential money laundering activities."
-        citation="Bank Negara Malaysia AML/CFT Policy Document, Section 1, Paragraph 14.1"
-        citationLink="https://www.bnm.gov.my/aml-cft"
-        severity="critical"
-        recommendation="Implement mandatory KYC verification for all transfer amounts. Add transaction monitoring alerts for patterns that may indicate structuring."
-      />
+      {gaps.map((gap) => (
+        <RiskCard
+          key={gap.gap_id}
+          title={gap.regulation.name}
+          detectedGap={gap.gap_description}
+          citation={gap.citation}
+          citationLink={undefined}
+          severity={gap.severity}
+          recommendation={gap.recommendation}
+        />
+      ))}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { AlertCircle, FileCheck, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { GapAnalysisResult } from "@/lib/types/compliance";
 
 interface StatCardProps {
   title: string;
@@ -42,8 +43,25 @@ export function StatCard({ title, value, icon, trend, variant = "default" }: Sta
   );
 }
 
-export function ComplianceScoreCard() {
-  const score = 92;
+interface ComplianceScoreCardProps {
+  score: number;
+}
+
+export function ComplianceScoreCard({ score }: ComplianceScoreCardProps) {
+  const getScoreVariant = (score: number) => {
+    if (score >= 90) return { color: "green", text: "Excellent" };
+    if (score >= 70) return { color: "yellow", text: "Good" };
+    if (score >= 50) return { color: "orange", text: "Fair" };
+    return { color: "red", text: "Critical" };
+  };
+
+  const variant = getScoreVariant(score);
+  const colorClasses = {
+    green: "text-green-600 bg-green-50",
+    yellow: "text-yellow-600 bg-yellow-50",
+    orange: "text-orange-600 bg-orange-50",
+    red: "text-red-600 bg-red-50",
+  };
 
   return (
     <Card>
@@ -51,42 +69,50 @@ export function ComplianceScoreCard() {
         <CardTitle className="text-sm font-medium text-gray-600">
           BNM Compliance Score
         </CardTitle>
-        <div className="rounded-full bg-green-50 p-2 text-green-600">
+        <div className={cn("rounded-full p-2", colorClasses[variant.color])}>
           <TrendingUp className="h-4 w-4" />
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-end gap-2">
-          <span className="text-4xl font-bold text-green-600">{score}%</span>
-          <span className="mb-1 text-sm text-gray-500">compliant</span>
+          <span className={cn("text-4xl font-bold", `text-${variant.color}-600`)}>
+            {score}%
+          </span>
+          <span className="mb-1 text-sm text-gray-500">{variant.text}</span>
         </div>
         <Progress value={score} className="h-2" />
         <p className="text-xs text-gray-500">
-          +3% from last quarter
+          Based on AI semantic analysis
         </p>
       </CardContent>
     </Card>
   );
 }
 
-export function StatsGrid() {
+interface StatsGridProps {
+  result: GapAnalysisResult;
+}
+
+export function StatsGrid({ result }: StatsGridProps) {
+  const criticalCount = result.summary.critical_gaps + result.summary.high_gaps;
+  
   return (
     <div className="grid gap-4 md:grid-cols-3">
       <StatCard
-        title="Active Audits"
-        value={3}
+        title="Total Gaps Detected"
+        value={result.summary.total_gaps}
         icon={<FileCheck className="h-4 w-4" />}
-        trend="2 in progress, 1 pending review"
+        trend={`${result.summary.critical_gaps} critical, ${result.summary.high_gaps} high`}
         variant="default"
       />
       <StatCard
-        title="Critical Risks Found"
-        value={1}
+        title="Critical & High Risks"
+        value={criticalCount}
         icon={<AlertCircle className="h-4 w-4" />}
         trend="Requires immediate attention"
-        variant="warning"
+        variant={criticalCount > 0 ? "warning" : "success"}
       />
-      <ComplianceScoreCard />
+      <ComplianceScoreCard score={result.compliance_score} />
     </div>
   );
 }
