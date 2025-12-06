@@ -44,11 +44,11 @@ export function DashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-full w-64 flex-col border-r bg-white">
+    <div className="flex h-full w-64 flex-col border-r bg-sidebar">
       {/* Logo/Brand */}
       <div className="flex h-16 items-center gap-2 border-b px-6">
-        <ShieldCheck className="h-6 w-6 text-blue-600" />
-        <span className="text-lg font-semibold text-gray-900">
+        <ShieldCheck className="h-6 w-6 text-primary" />
+        <span className="text-lg font-semibold text-sidebar-foreground">
           Compliance AI
         </span>
       </div>
@@ -66,8 +66,8 @@ export function DashboardSidebar() {
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-blue-50 text-blue-700"
-                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                  ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                  : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
               )}
             >
               <Icon className="h-5 w-5" />
@@ -79,9 +79,9 @@ export function DashboardSidebar() {
 
       {/* Footer Info */}
       <div className="border-t p-4">
-        <div className="rounded-lg bg-blue-50 p-3">
-          <p className="text-xs font-medium text-blue-900">BNM Compliance</p>
-          <p className="text-xs text-blue-700">Last Updated: Dec 2025</p>
+        <div className="rounded-lg bg-sidebar-accent p-3">
+          <p className="text-xs font-medium text-sidebar-accent-foreground">BNM Compliance</p>
+          <p className="text-xs text-sidebar-accent-foreground/70">Last Updated: Dec 2025</p>
         </div>
       </div>
     </div>

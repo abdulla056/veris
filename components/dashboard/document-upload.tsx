@@ -150,19 +150,19 @@ export function DocumentUpload() {
   };
 
   return (
-    <Card className="border-2 border-dashed border-blue-300 bg-blue-50/30">
+    <Card className="border-2 border-dashed border-primary/30 bg-primary/5">
       <CardHeader>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg font-semibold text-gray-900">
+            <CardTitle className="text-lg font-semibold text-foreground">
               Quick Audit - Document Upload
             </CardTitle>
-            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+            <Badge variant="secondary" className="bg-primary/10 text-primary">
               Dual Document Analysis
             </Badge>
           </div>
           
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-muted-foreground">
             Upload <strong>two documents</strong> for comprehensive compliance gap detection:
           </p>
         </div>
@@ -176,8 +176,8 @@ export function DocumentUpload() {
               flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-all
               ${
                 activeDocumentType === "product-spec"
-                  ? "border-blue-500 bg-blue-50 text-blue-900"
-                  : "border-gray-200 bg-white text-gray-600 hover:border-blue-300"
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border bg-card text-muted-foreground hover:border-primary/50"
               }
             `}
           >
@@ -194,8 +194,8 @@ export function DocumentUpload() {
               flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-all
               ${
                 activeDocumentType === "compliance-policy"
-                  ? "border-teal-500 bg-teal-50 text-teal-900"
-                  : "border-gray-200 bg-white text-gray-600 hover:border-teal-300"
+                  ? "border-teal-500 bg-teal-500/10 text-teal-700 dark:text-teal-400"
+                  : "border-border bg-card text-muted-foreground hover:border-teal-500/50"
               }
             `}
           >
@@ -215,11 +215,11 @@ export function DocumentUpload() {
             ${
               isDragActive && !isDragReject
                 ? activeDocumentType === "product-spec"
-                  ? "border-blue-500 bg-blue-100"
-                  : "border-teal-500 bg-teal-100"
+                  ? "border-primary bg-primary/20"
+                  : "border-teal-500 bg-teal-500/20"
                 : isDragReject
-                ? "border-red-500 bg-red-50"
-                : "border-gray-300 bg-white hover:border-blue-400 hover:bg-blue-50/50"
+                ? "border-destructive bg-destructive/10"
+                : "border-border bg-card hover:border-primary/50 hover:bg-primary/5"
             }
           `}
         >
@@ -228,21 +228,21 @@ export function DocumentUpload() {
           <div className="flex flex-col items-center justify-center">
             <div className={`
               rounded-full p-4
-              ${activeDocumentType === "product-spec" ? "bg-blue-100" : "bg-teal-100"}
+              ${activeDocumentType === "product-spec" ? "bg-primary/20" : "bg-teal-500/20"}
             `}>
               <Upload className={`
                 h-8 w-8
-                ${activeDocumentType === "product-spec" ? "text-blue-600" : "text-teal-600"}
+                ${activeDocumentType === "product-spec" ? "text-primary" : "text-teal-600 dark:text-teal-400"}
               `} />
             </div>
             
             {isDragActive ? (
               isDragReject ? (
                 <div className="mt-4">
-                  <h3 className="text-lg font-medium text-red-600">
+                  <h3 className="text-lg font-medium text-destructive">
                     Invalid file type
                   </h3>
-                  <p className="mt-2 text-sm text-red-500">
+                  <p className="mt-2 text-sm text-destructive/80">
                     Only PDF files are accepted
                   </p>
                 </div>
@@ -250,13 +250,13 @@ export function DocumentUpload() {
                 <div className="mt-4">
                   <h3 className={`
                     text-lg font-medium
-                    ${activeDocumentType === "product-spec" ? "text-blue-600" : "text-teal-600"}
+                    ${activeDocumentType === "product-spec" ? "text-primary" : "text-teal-600 dark:text-teal-400"}
                   `}>
                     Drop your {activeDocumentType === "product-spec" ? "Product Spec" : "Compliance Policy"} here
                   </h3>
                   <p className={`
                     mt-2 text-sm
-                    ${activeDocumentType === "product-spec" ? "text-blue-500" : "text-teal-500"}
+                    ${activeDocumentType === "product-spec" ? "text-primary/80" : "text-teal-600/80 dark:text-teal-400/80"}
                   `}>
                     Release to start the audit
                   </p>
@@ -264,24 +264,24 @@ export function DocumentUpload() {
               )
             ) : (
               <div className="mt-4">
-                <h3 className="text-lg font-medium text-gray-900">
+                <h3 className="text-lg font-medium text-foreground">
                   {activeDocumentType === "product-spec" 
                     ? "Upload Product Specification" 
                     : "Upload Current Compliance Policy"}
                 </h3>
-                <p className="mt-2 text-sm text-gray-600">
+                <p className="mt-2 text-sm text-muted-foreground">
                   Drag & drop or click to browse
                 </p>
-                <p className="mt-1 text-xs text-gray-400">
+                <p className="mt-1 text-xs text-muted-foreground">
                   PDF only • Max 10MB • Multiple files supported
                 </p>
                 {activeDocumentType === "product-spec" && (
-                  <p className="mt-3 text-xs text-blue-600 font-medium">
+                  <p className="mt-3 text-xs text-primary font-medium">
                     📄 Examples: Feature specs, user flows, product designs, technical docs
                   </p>
                 )}
                 {activeDocumentType === "compliance-policy" && (
-                  <p className="mt-3 text-xs text-teal-600 font-medium">
+                  <p className="mt-3 text-xs text-teal-600 dark:text-teal-400 font-medium">
                     📋 Examples: Internal AML policy, KYC guidelines, transaction monitoring framework
                   </p>
                 )}
@@ -294,8 +294,8 @@ export function DocumentUpload() {
                 className={`
                   rounded-lg px-6 py-2.5 text-sm font-medium text-white transition-colors
                   ${activeDocumentType === "product-spec" 
-                    ? "bg-blue-600 hover:bg-blue-700" 
-                    : "bg-teal-600 hover:bg-teal-700"}
+                    ? "bg-primary hover:bg-primary/90" 
+                    : "bg-teal-600 hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600"}
                 `}
               >
                 Select {activeDocumentType === "product-spec" ? "Product Spec" : "Policy Document"}
@@ -310,27 +310,27 @@ export function DocumentUpload() {
             {uploadedFiles.map((uploadedFile) => (
               <div
                 key={uploadedFile.id}
-                className="rounded-lg border border-gray-200 bg-white p-4"
+                className="rounded-lg border border-border bg-card p-4"
               >
                 <div className="flex items-start gap-3">
                   {uploadedFile.documentType === "product-spec" ? (
-                    <FileText className="h-5 w-5 flex-shrink-0 text-blue-600 mt-0.5" />
+                    <FileText className="h-5 w-5 flex-shrink-0 text-primary mt-0.5" />
                   ) : (
-                    <FileCheck className="h-5 w-5 flex-shrink-0 text-teal-600 mt-0.5" />
+                    <FileCheck className="h-5 w-5 flex-shrink-0 text-teal-600 dark:text-teal-400 mt-0.5" />
                   )}
                   
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                        <p className="text-sm font-medium text-foreground truncate">
                           {uploadedFile.file.name}
                         </p>
                         <Badge 
                           variant="outline" 
                           className={
                             uploadedFile.documentType === "product-spec"
-                              ? "bg-blue-50 text-blue-700 border-blue-200 text-xs"
-                              : "bg-teal-50 text-teal-700 border-teal-200 text-xs"
+                              ? "bg-primary/10 text-primary border-primary/30 text-xs"
+                              : "bg-teal-500/10 text-teal-700 dark:text-teal-400 border-teal-500/30 text-xs"
                           }
                         >
                           {uploadedFile.documentType === "product-spec" ? "Product Spec" : "Policy Doc"}
@@ -338,15 +338,15 @@ export function DocumentUpload() {
                       </div>
                       
                       {uploadedFile.status === "uploading" && (
-                        <Loader2 className="h-4 w-4 animate-spin text-blue-600 flex-shrink-0" />
+                        <Loader2 className="h-4 w-4 animate-spin text-primary flex-shrink-0" />
                       )}
                       {uploadedFile.status === "success" && (
-                        <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0" />
+                        <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400 flex-shrink-0" />
                       )}
                       {uploadedFile.status === "error" && (
                         <button
                           onClick={() => removeFile(uploadedFile.id)}
-                          className="text-gray-400 hover:text-gray-600 flex-shrink-0"
+                          className="text-muted-foreground hover:text-foreground flex-shrink-0"
                         >
                           <X className="h-4 w-4" />
                         </button>
@@ -354,17 +354,17 @@ export function DocumentUpload() {
                     </div>
 
                     <div className="mt-1 flex items-center gap-2">
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-muted-foreground">
                         {(uploadedFile.file.size / 1024 / 1024).toFixed(2)} MB
                       </p>
                       
                       {uploadedFile.status === "uploading" && (
-                        <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                        <Badge variant="secondary" className="bg-primary/10 text-primary">
                           Uploading {uploadedFile.progress}%
                         </Badge>
                       )}
                       {uploadedFile.status === "success" && (
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">
+                        <Badge variant="secondary" className="bg-green-500/10 text-green-700 dark:text-green-400">
                           ✓ Ready for Analysis
                         </Badge>
                       )}
@@ -380,7 +380,7 @@ export function DocumentUpload() {
                     )}
 
                     {uploadedFile.status === "error" && uploadedFile.error && (
-                      <div className="mt-2 flex items-start gap-1 text-xs text-red-600">
+                      <div className="mt-2 flex items-start gap-1 text-xs text-destructive">
                         <AlertCircle className="h-3 w-3 mt-0.5 flex-shrink-0" />
                         <span>{uploadedFile.error}</span>
                       </div>
@@ -393,14 +393,14 @@ export function DocumentUpload() {
         )}
 
         {/* Information Banner */}
-        <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
+        <div className="rounded-lg bg-primary/10 border border-primary/30 p-4">
           <div className="flex items-start gap-3">
-            <div className="rounded-full bg-blue-100 p-1.5 flex-shrink-0">
-              <FileText className="h-4 w-4 text-blue-600" />
+            <div className="rounded-full bg-primary/20 p-1.5 flex-shrink-0">
+              <FileText className="h-4 w-4 text-primary" />
             </div>
             <div className="flex-1 text-sm">
-              <p className="font-medium text-blue-900">How It Works:</p>
-              <ol className="mt-2 space-y-1 text-blue-700 list-decimal list-inside">
+              <p className="font-medium text-foreground">How It Works:</p>
+              <ol className="mt-2 space-y-1 text-muted-foreground list-decimal list-inside">
                 <li>Upload your <strong>Product Specification</strong> (new feature or product design)</li>
                 <li>Upload your <strong>Current Compliance Policy</strong> (internal AML/CFT guidelines)</li>
                 <li>Our AI compares both against <strong>BNM regulations</strong></li>

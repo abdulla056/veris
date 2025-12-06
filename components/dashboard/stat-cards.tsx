@@ -16,15 +16,15 @@ interface StatCardProps {
 
 export function StatCard({ title, value, icon, trend, variant = "default" }: StatCardProps) {
   const variantStyles = {
-    default: "text-blue-600 bg-blue-50",
-    warning: "text-red-600 bg-red-50",
-    success: "text-green-600 bg-green-50",
+    default: "text-primary bg-primary/10",
+    warning: "text-destructive bg-destructive/10",
+    success: "text-green-600 dark:text-green-400 bg-green-500/10",
   };
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-gray-600">
+        <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
         </CardTitle>
         <div className={cn("rounded-full p-2", variantStyles[variant])}>
@@ -32,9 +32,9 @@ export function StatCard({ title, value, icon, trend, variant = "default" }: Sta
         </div>
       </CardHeader>
       <CardContent>
-        <div className="text-3xl font-bold text-gray-900">{value}</div>
+        <div className="text-3xl font-bold text-foreground">{value}</div>
         {trend && (
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-muted-foreground">
             {trend}
           </p>
         )}
@@ -57,16 +57,23 @@ export function ComplianceScoreCard({ score }: ComplianceScoreCardProps) {
 
   const variant = getScoreVariant(score);
   const colorClasses = {
-    green: "text-green-600 bg-green-50",
-    yellow: "text-yellow-600 bg-yellow-50",
-    orange: "text-orange-600 bg-orange-50",
-    red: "text-red-600 bg-red-50",
+    green: "text-green-600 dark:text-green-400 bg-green-500/10",
+    yellow: "text-yellow-600 dark:text-yellow-400 bg-yellow-500/10",
+    orange: "text-orange-600 dark:text-orange-400 bg-orange-500/10",
+    red: "text-destructive bg-destructive/10",
+  };
+
+  const textColorClasses = {
+    green: "text-green-600 dark:text-green-400",
+    yellow: "text-yellow-600 dark:text-yellow-400",
+    orange: "text-orange-600 dark:text-orange-400",
+    red: "text-destructive",
   };
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-gray-600">
+        <CardTitle className="text-sm font-medium text-muted-foreground">
           BNM Compliance Score
         </CardTitle>
         <div className={cn("rounded-full p-2", colorClasses[variant.color])}>
@@ -75,13 +82,13 @@ export function ComplianceScoreCard({ score }: ComplianceScoreCardProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-end gap-2">
-          <span className={cn("text-4xl font-bold", `text-${variant.color}-600`)}>
+          <span className={cn("text-4xl font-bold", textColorClasses[variant.color])}>
             {score}%
           </span>
-          <span className="mb-1 text-sm text-gray-500">{variant.text}</span>
+          <span className="mb-1 text-sm text-muted-foreground">{variant.text}</span>
         </div>
         <Progress value={score} className="h-2" />
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-muted-foreground">
           Based on AI semantic analysis
         </p>
       </CardContent>
