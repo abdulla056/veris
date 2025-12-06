@@ -1,12 +1,12 @@
 /**
- * Convex Uploader - Uploads compliance data to Convex database
+ * Convex Uploader - Uploads compliance data to the main project's regulations table
  */
 
 import { log } from 'crawlee';
 import { ComplianceData } from './claude-processor.js';
 
 interface ConvexConfig {
-  deploymentUrl: string; // e.g., "https://your-deployment.convex.cloud"
+  deploymentUrl: string; // e.g., "https://diligent-cardinal-39.convex.cloud"
 }
 
 interface ComplianceResult {
@@ -17,9 +17,10 @@ interface ComplianceResult {
 }
 
 /**
- * Transform ComplianceData to Convex format (camelCase keys)
+ * Transform ComplianceData to regulations table format (snake_case keys)
+ * Matches the schema in /convex/schema.ts - regulations table
  */
-function transformToConvexFormat(
+function transformToRegulationsFormat(
   result: ComplianceResult
 ): Record<string, unknown> | null {
   if (!result.compliance) return null;
@@ -27,68 +28,88 @@ function transformToConvexFormat(
   const c = result.compliance;
 
   return {
-    filename: result.filename,
-    sourceUrl: result.sourceUrl,
-    processedAt: new Date().toISOString(),
-    status: result.status,
-    actName: c.act_name || '',
-    jurisdiction: c.jurisdiction || '',
+    // Core fields
+    act_name: c.act_name || '',
+    jurisdiction: c.jurisdiction || 'Malaysia',
     version: c.version || '',
-    lastUpdated: c.last_updated || '',
+    last_updated: c.last_updated || '',
+    
+    // Definitions
     definitions: (c.definitions || []).map((d) => ({
       term: d.term || '',
       meaning: d.meaning || '',
-      sourceSection: d.source_section || '',
+      source_section: d.source_section || '',
     })),
+    
+    // Obligations
     obligations: (c.obligations || []).map((o) => ({
       name: o.name || '',
       description: o.description || '',
-      appliesTo: o.applies_to || [],
-      sourceSection: o.source_section || '',
-      riskLevel: o.risk_level || '',
+      applies_to: o.applies_to || [],
+      source_section: o.source_section || '',
+      risk_level: o.risk_level || '',
     })),
+    
+    // Procedures
     procedures: (c.procedures || []).map((p) => ({
       name: p.name || '',
       steps: p.steps || [],
       conditions: p.conditions || '',
-      sourceSection: p.source_section || '',
+      source_section: p.source_section || '',
     })),
+    
+    // Offences
     offences: (c.offences || []).map((o) => ({
       offence: o.offence || '',
       description: o.description || '',
-      sourceSection: o.source_section || '',
+      source_section: o.source_section || '',
     })),
+    
+    // Penalties
     penalties: (c.penalties || []).map((p) => ({
       offence: p.offence || '',
-      fineAmount: p.fine_amount || '',
-      imprisonmentTerm: p.imprisonment_term || '',
-      corporatePenalty: p.corporate_penalty || '',
-      sourceSection: p.source_section || '',
+      fine_amount: p.fine_amount || '',
+      imprisonment_term: p.imprisonment_term || '',
+      corporate_penalty: p.corporate_penalty || '',
+      source_section: p.source_section || '',
     })),
-    recordkeepingRequirements: {
-      retentionPeriod: c.recordkeeping_requirements?.retention_period || '',
+    
+    // Recordkeeping
+    recordkeeping_requirements: {
+      retention_period: c.recordkeeping_requirements?.retention_period || '',
       conditions: c.recordkeeping_requirements?.conditions || '',
-      sourceSection: c.recordkeeping_requirements?.source_section || '',
+      source_section: c.recordkeeping_requirements?.source_section || '',
     },
+    
+    // Applicability
     applicability: (c.applicability || []).map((a) => ({
-      entityType: a.entity_type || '',
+      entity_type: a.entity_type || '',
       obligations: a.obligations || [],
       exemptions: a.exemptions || [],
     })),
+    
+    // Exceptions
     exceptions: (c.exceptions || []).map((e) => ({
       description: e.description || '',
-      sourceSection: e.source_section || '',
+      source_section: e.source_section || '',
     })),
-    crossReferences: (c.cross_references || []).map((cr) => ({
-      referenceType: cr.reference_type || '',
-      relatedDocument: cr.related_document || '',
+    
+    // Cross references
+    cross_references: (c.cross_references || []).map((cr) => ({
+      reference_type: cr.reference_type || '',
+      related_document: cr.related_document || '',
       description: cr.description || '',
     })),
+    
+    // Metadata fields
+    source_url: result.sourceUrl || '',
+    scraped_at: new Date().toISOString(),
+    pdf_filename: result.filename || '',
   };
 }
 
 /**
- * Upload compliance data to Convex using HTTP API
+ * Upload compliance data to Convex regulations table using HTTP API
  */
 export async function uploadToConvex(
   results: ComplianceResult[],
@@ -101,7 +122,7 @@ export async function uploadToConvex(
     return stats;
   }
 
-  log.info(`Uploading ${results.length} compliance documents to Convex...`);
+  log.info(`Uploading ${results.length} regulations to Convex...`);
 
   for (const result of results) {
     if (result.status !== 'success' || !result.compliance) {
@@ -110,22 +131,22 @@ export async function uploadToConvex(
     }
 
     try {
-      const convexData = transformToConvexFormat(result);
-      if (!convexData) {
+      const regulationData = transformToRegulationsFormat(result);
+      if (!regulationData) {
         log.warning(`Failed to transform ${result.filename}`);
         stats.failed++;
         continue;
       }
 
-      // Call Convex mutation via HTTP API
+      // Call regulations:create mutation via HTTP API
       const response = await fetch(`${config.deploymentUrl}/api/mutation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          path: 'compliance:upsertComplianceDocument',
-          args: convexData,
+          path: 'regulations:create',
+          args: regulationData,
         }),
       });
 
@@ -135,7 +156,7 @@ export async function uploadToConvex(
       }
 
       const responseData = await response.json();
-      log.info(`✓ Uploaded to Convex: ${result.filename} (${responseData.action || 'success'})`);
+      log.info(`✓ Uploaded to regulations table: ${result.filename} (id: ${responseData})`);
       stats.uploaded++;
 
     } catch (error) {
@@ -151,7 +172,7 @@ export async function uploadToConvex(
 }
 
 /**
- * Alternative: Upload using Convex client (requires CONVEX_DEPLOY_KEY)
+ * Alternative: Upload using Convex client (requires proper setup)
  */
 export async function uploadWithConvexClient(
   results: ComplianceResult[],
@@ -167,14 +188,14 @@ export async function uploadWithConvexClient(
     if (result.status !== 'success' || !result.compliance) continue;
 
     try {
-      const convexData = transformToConvexFormat(result);
-      if (!convexData) {
+      const regulationData = transformToRegulationsFormat(result);
+      if (!regulationData) {
         stats.failed++;
         continue;
       }
 
-      // Use the mutation function reference
-      await client.mutation('compliance:upsertComplianceDocument' as any, convexData as any);
+      // Use the regulations:create mutation
+      await client.mutation('regulations:create' as any, regulationData as any);
       log.info(`✓ Uploaded: ${result.filename}`);
       stats.uploaded++;
     } catch (error) {
@@ -186,4 +207,3 @@ export async function uploadWithConvexClient(
 
   return stats;
 }
-
