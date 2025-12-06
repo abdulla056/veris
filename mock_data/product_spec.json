@@ -1,146 +1,134 @@
 {
-  "product_name": "Veris Compliance Engine",
-  "version": "1.0.0-beta",
-  "description": "An AI-powered regulatory compliance platform designed to automate AML/CFT obligations for Malaysian financial institutions.",
-  "target_industry": [
-    "fintech",
-    "banking",
-    "regtech"
-  ],
-  "key_features": [
-    {
-      "id": "FEAT-001",
-      "name": "Automated Regulatory Scanning",
-      "description": "Continuously scrapes and parses BNM and SC regulations to identify new obligations.",
-      "problem_solved": "Manual tracking of regulatory changes is slow and error-prone.",
-      "regulatory_relevance": [
-        "AMLA",
-        "BNM Policy Documents"
-      ],
-      "dependencies": [
-        "scraper",
-        "LLM"
-      ],
-      "status": "in-development"
-    },
-    {
-      "id": "FEAT-002",
-      "name": "Intelligent Policy Gap Analysis",
-      "description": "Compares internal bank policies against the latest parsed regulations to highlight gaps.",
-      "problem_solved": "Identifying where internal SOPs fall short of new laws.",
-      "regulatory_relevance": [
-        "Audit Requirements",
-        "Internal Controls"
-      ],
-      "dependencies": [
-        "LLM",
-        "Convex DB",
-        "Vector Search"
-      ],
-      "status": "planned"
-    },
-    {
-      "id": "FEAT-003",
-      "name": "Real-time Risk Scoring",
-      "description": "Assigns risk scores to customer profiles based on CDD data and sanctions lists.",
-      "problem_solved": "Inconsistent risk assessment by human officers.",
-      "regulatory_relevance": [
-        "KYC",
-        "CDD",
-        "AML/CFT"
-      ],
-      "dependencies": [
-        "Convex DB"
-      ],
-      "status": "completed"
-    }
-  ],
-  "architecture": {
-    "frontend": {
-      "type": "Web Application",
-      "tech_stack": [
-        "Next.js",
-        "React",
-        "Tailwind CSS",
-        "Shadcn UI"
-      ]
-    },
-    "backend": {
-      "services": [
-        "Regulatory Scraper Service",
-        "Policy Analysis Service",
-        "Risk Engine"
-      ],
-      "databases": [
-        "Convex (Real-time DB)",
-        "Pinecone (Vector DB)"
-      ],
-      "ai_models": [
-        "Claude 3.5 Sonnet",
-        "OpenAI Embedding"
-      ],
-      "infra": [
-        "Vercel",
-        "AWS Lambda"
-      ]
-    }
-  },
-  "data_pipeline": {
-    "inputs": [
-      "PDF regulatory documents from BNM website",
-      "Scraped HTML content from e-Federal Gazette",
-      "Bank internal policies (PDF/Docx)"
+  "companyProductSpec": {
+    "companyName": "PayNet Digital Sdn Bhd",
+    "registrationNumber": "202001012345",
+    "incorporationCountry": "Malaysia",
+    "description": "A licensed e-money issuer providing digital payment solutions including e-wallets, payment gateway services, and cross-border remittance for Malaysian consumers and businesses.",
+    "industryCategory": "Fintech - E-Money Issuer",
+    "productName": "PayNet e-Wallet",
+    "productVersion": "2.5.0",
+    "productDescription": "Mobile-first digital wallet application enabling users to store funds, make payments, transfer money, and access financial services. Licensed under BNM e-Money Guidelines.",
+    "submittedAt": "2024-12-06T10:30:00Z",
+    "features": [
+      {
+        "featureId": "FEAT-001",
+        "name": "Digital Onboarding (e-KYC)",
+        "description": "Allows users to register and verify identity using facial recognition and document scanning without visiting a physical branch.",
+        "dataUsed": ["Full Name", "NRIC Number", "Date of Birth", "Facial Biometrics", "Address", "Phone Number", "Email"],
+        "userTypes": ["Individual Customers", "Small Business Owners"],
+        "riskAreas": ["Identity Fraud", "Synthetic Identity", "Document Forgery"],
+        "relatedPolicies": ["POL-KYC-001", "POL-REC-001"]
+      },
+      {
+        "featureId": "FEAT-002",
+        "name": "Peer-to-Peer Transfer",
+        "description": "Enables instant money transfers between registered users using phone number or QR code.",
+        "dataUsed": ["Sender Account", "Recipient Identifier", "Amount", "Transaction Timestamp", "Device Fingerprint"],
+        "userTypes": ["Individual Customers"],
+        "riskAreas": ["Money Laundering", "Structuring", "Mule Accounts"],
+        "relatedPolicies": ["POL-STR-001", "POL-KYC-001"]
+      },
+      {
+        "featureId": "FEAT-003",
+        "name": "Bill Payments",
+        "description": "Allows users to pay utility bills, telco bills, and government services directly from the wallet.",
+        "dataUsed": ["Biller Account Number", "Payment Amount", "User Account", "Transaction Reference"],
+        "userTypes": ["Individual Customers", "Small Business Owners"],
+        "riskAreas": ["Payment Fraud", "Account Takeover"],
+        "relatedPolicies": ["POL-REC-001"]
+      },
+      {
+        "featureId": "FEAT-004",
+        "name": "Cross-Border Remittance",
+        "description": "International money transfer service to selected countries with real-time exchange rates.",
+        "dataUsed": ["Sender KYC Data", "Beneficiary Name", "Beneficiary Bank Details", "Purpose of Transfer", "Source of Funds"],
+        "userTypes": ["Individual Customers", "Migrant Workers"],
+        "riskAreas": ["Terrorism Financing", "Sanctions Evasion", "Trade-Based ML"],
+        "relatedPolicies": ["POL-KYC-001", "POL-STR-001"]
+      },
+      {
+        "featureId": "FEAT-005",
+        "name": "Merchant QR Payments",
+        "description": "DuitNow QR integration allowing users to pay at participating merchants nationwide.",
+        "dataUsed": ["Merchant ID", "Transaction Amount", "User Account", "Location Data", "Timestamp"],
+        "userTypes": ["Individual Customers"],
+        "riskAreas": ["Merchant Fraud", "Transaction Laundering"],
+        "relatedPolicies": ["POL-STR-001"]
+      }
     ],
-    "processing": [
-      "OCR via Tesseract/Textract",
-      "Semantic Chunking",
-      "LLM summarization (Claude)",
-      "JSON structuring of obligations",
-      "Embedding generation"
+    "financialOperations": [
+      {
+        "opId": "OP-001",
+        "name": "Wallet Top-Up",
+        "type": "Funding",
+        "description": "Users can add funds to their wallet via bank transfer, debit card, or cash at partner outlets.",
+        "dataUsed": ["Source Account", "Amount", "User Account", "Top-Up Channel"],
+        "riskAreas": ["Structuring", "Source of Funds Concealment"],
+        "relatedPolicies": ["POL-KYC-001", "POL-STR-001"]
+      },
+      {
+        "opId": "OP-002",
+        "name": "Cash Withdrawal",
+        "type": "Disbursement",
+        "description": "Users can withdraw cash at partner ATMs and retail outlets.",
+        "dataUsed": ["User Account", "Withdrawal Amount", "Withdrawal Location", "Agent ID"],
+        "riskAreas": ["Money Mule Activity", "Cash-Out Fraud"],
+        "relatedPolicies": ["POL-STR-001", "POL-KYC-001"]
+      },
+      {
+        "opId": "OP-003",
+        "name": "FX Conversion",
+        "type": "Currency Exchange",
+        "description": "Real-time currency conversion for cross-border transactions at competitive rates.",
+        "dataUsed": ["Base Currency", "Target Currency", "Amount", "Exchange Rate", "Timestamp"],
+        "riskAreas": ["Rate Manipulation", "Regulatory Arbitrage"],
+        "relatedPolicies": ["POL-REC-001"]
+      }
     ],
-    "outputs": [
-      "Structured compliance rules (JSON)",
-      "Risk scores (0-100)",
-      "Policy gap report (PDF)"
-    ]
-  },
-  "risk_management": {
-    "llm_risks": [
-      "hallucination",
-      "incorrect interpretation of law",
-      "data leakage of PII"
+    "thirdPartyIntegrations": [
+      {
+        "name": "MyKad Verification API (JPN)",
+        "purpose": "Real-time verification of Malaysian national ID cards during e-KYC onboarding",
+        "dataShared": ["NRIC Number", "Full Name", "Date of Birth"],
+        "riskAreas": ["Data Privacy", "API Security"],
+        "relatedPolicies": ["POL-KYC-001", "POL-REC-001"]
+      },
+      {
+        "name": "World-Check (Refinitiv)",
+        "purpose": "PEP and sanctions screening for customer onboarding and ongoing monitoring",
+        "dataShared": ["Customer Name", "Date of Birth", "Nationality", "ID Number"],
+        "riskAreas": ["Screening Gaps", "False Negatives"],
+        "relatedPolicies": ["POL-KYC-001", "POL-STR-001"]
+      },
+      {
+        "name": "DuitNow (PayNet)",
+        "purpose": "Instant payment rails for P2P transfers and merchant payments",
+        "dataShared": ["Transaction Details", "Sender/Recipient IDs", "Amount"],
+        "riskAreas": ["Transaction Fraud", "System Availability"],
+        "relatedPolicies": ["POL-STR-001"]
+      },
+      {
+        "name": "Wise API",
+        "purpose": "Cross-border remittance corridor for international transfers",
+        "dataShared": ["Sender KYC", "Beneficiary Details", "Transfer Amount", "Purpose"],
+        "riskAreas": ["Correspondent Banking Risk", "Sanctions"],
+        "relatedPolicies": ["POL-KYC-001", "POL-STR-001"]
+      }
     ],
-    "mitigations": [
-      "citation-based retrieval (RAG)",
-      "confidence scoring thresholds",
-      "human review checkpoints for high-risk flags",
-      "PII redaction pre-processing"
-    ]
-  },
-  "regulatory_scope": [
-    {
-      "jurisdiction": "Malaysia",
-      "documents": [
-        {
-          "name": "AMLA 2001",
-          "sections_used": [
-            "Section 13",
-            "Section 14",
-            "Section 16"
-          ],
-          "last_updated": "2024-01-01",
-          "url": "https://www.bnm.gov.my/amla"
-        },
-        {
-          "name": "BNM AML/CFT Policy Document",
-          "sections_used": [
-            "Part B: CDD",
-            "Part D: Reporting"
-          ],
-          "last_updated": "2024-02-15",
-          "url": "https://www.bnm.gov.my/policy"
-        }
-      ]
-    }
-  ]
+    "systemArchitecture": {
+      "frontend": "React Native mobile app with Next.js web dashboard",
+      "backend": "Node.js microservices on AWS EKS with Go for high-throughput transaction processing",
+      "databases": ["PostgreSQL (primary)", "Redis (caching)", "MongoDB (audit logs)", "Convex (real-time compliance data)"],
+      "infrastructure": ["AWS (ap-southeast-1)", "CloudFlare CDN", "AWS WAF", "DataDog monitoring"],
+      "securityControls": ["TLS 1.3 encryption", "OAuth 2.0 + PKCE", "Hardware Security Module (HSM) for key management", "PCI-DSS Level 1 compliance", "SOC 2 Type II certified"]
+    },
+    "knownRisks": [
+      "High transaction volume may exceed real-time screening capacity during peak periods",
+      "Cross-border remittance to high-risk corridors requires enhanced due diligence",
+      "E-KYC facial recognition may have reduced accuracy for certain demographics",
+      "Agent network cash-out points present higher money mule risk",
+      "DuitNow instant payments limit time for fraud detection"
+    ],
+    "keywords": ["e-wallet", "e-money", "digital payments", "remittance", "DuitNow", "e-KYC", "AML", "CFT", "fintech", "mobile payments", "Malaysia"]
+  }
 }

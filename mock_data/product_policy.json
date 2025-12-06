@@ -1,126 +1,238 @@
 {
-  "policy_id": "POL-MY-AML-2024-001",
-  "policy_name": "Standard Customer Due Diligence (CDD) Policy",
-  "policy_type": "aml",
-  "jurisdiction": "Malaysia",
-  "source_document": {
-    "title": "Anti-Money Laundering, Anti-Terrorism Financing and Proceeds of Unlawful Activities Act 2001",
-    "url": "https://www.bnm.gov.my/legislation",
-    "section": "Section 16",
-    "excerpt": "A reporting institution shall conduct customer due diligence."
-  },
-  "description": "Policy outlining the standard procedures for identifying and verifying customers for individual accounts.",
-  "requirements": [
-    {
-      "requirement_id": "REQ-CDD-01",
-      "text": "Obtain full name, NRIC/Passport number, and residential address.",
-      "risk_level": "high",
-      "category": "KYC"
-    },
-    {
-      "requirement_id": "REQ-CDD-02",
-      "text": "Verify identity documents against original or certified true copies.",
-      "risk_level": "high",
-      "category": "CDD"
-    },
-    {
-      "requirement_id": "REQ-SCREEN-01",
-      "text": "Screen customer against UN Security Council Resolutions and MOHA sanction lists.",
-      "risk_level": "high",
-      "category": "screening"
-    }
-  ],
-  "obligations": [
-    {
-      "obligation_id": "OBL-VERIFY-ID",
-      "summary": "Mandatory ID Verification",
-      "detailed_text": "The institution must ensure that the customer's identity is verified using reliable, independent source documents.",
-      "violations_if_unmet": [
-        "Failure to conduct CDD",
-        "Breach of AMLA Section 16"
-      ],
-      "penalties": {
-        "fine": "RM 1,000,000",
-        "imprisonment": "1 year",
-        "regulator": "BNM"
+  "companyPolicySpec": {
+    "companyName": "PayNet Digital Sdn Bhd",
+    "submissionId": "SUB-2024-PN-001",
+    "submittedAt": "2024-12-06T10:30:00Z",
+    "policies": [
+      {
+        "policyId": "POL-KYC-001",
+        "policyName": "Customer Due Diligence (CDD) Policy",
+        "policyCategory": "AML/CFT",
+        "description": "Policy governing the identification, verification, and ongoing monitoring of customer identities to prevent money laundering and terrorism financing.",
+        "regulatoryCoverage": {
+          "regulatorReferences": [
+            "AMLA 2001 Section 16",
+            "BNM AML/CFT Policy Document 2024",
+            "FATF Recommendation 10"
+          ],
+          "domains": ["KYC", "AML", "CTF", "RiskManagement"]
+        },
+        "applicability": {
+          "appliesTo": ["All Customers", "Individual Accounts", "Corporate Accounts", "Walk-in Customers"],
+          "riskLevel": "High"
+        },
+        "requirements": [
+          {
+            "requirementId": "REQ-KYC-001",
+            "text": "Obtain full legal name as per NRIC/Passport for all new customers",
+            "type": "Data"
+          },
+          {
+            "requirementId": "REQ-KYC-002",
+            "text": "Verify identity documents against original or certified true copies",
+            "type": "Process"
+          },
+          {
+            "requirementId": "REQ-KYC-003",
+            "text": "Conduct e-KYC facial recognition for digital onboarding",
+            "type": "Technical"
+          },
+          {
+            "requirementId": "REQ-KYC-004",
+            "text": "Assign risk rating based on customer profile and transaction patterns",
+            "type": "Operational"
+          }
+        ],
+        "procedures": [
+          {
+            "procedureId": "PROC-KYC-001",
+            "stepNumber": 1,
+            "text": "Collect customer identification documents (NRIC/Passport)"
+          },
+          {
+            "procedureId": "PROC-KYC-002",
+            "stepNumber": 2,
+            "text": "Perform liveness check via e-KYC platform"
+          },
+          {
+            "procedureId": "PROC-KYC-003",
+            "stepNumber": 3,
+            "text": "Validate document authenticity against MyKad/Immigration database"
+          },
+          {
+            "procedureId": "PROC-KYC-004",
+            "stepNumber": 4,
+            "text": "Screen against sanction lists and PEP databases"
+          },
+          {
+            "procedureId": "PROC-KYC-005",
+            "stepNumber": 5,
+            "text": "Calculate and assign initial risk score"
+          },
+          {
+            "procedureId": "PROC-KYC-006",
+            "stepNumber": 6,
+            "text": "Approve account or escalate to Compliance Officer"
+          }
+        ],
+        "dataInvolved": ["Full Name", "NRIC Number", "Date of Birth", "Residential Address", "Occupation", "Source of Funds", "Facial Biometrics"],
+        "relatedProducts": ["e-Wallet", "Payment Gateway", "Remittance Service"],
+        "relatedRisks": ["Identity Fraud", "Money Laundering", "Terrorism Financing", "PEP Exposure"],
+        "version": "3.2",
+        "lastUpdated": "2024-11-15",
+        "sourcePage": "Internal Policy Document Section 4"
+      },
+      {
+        "policyId": "POL-STR-001",
+        "policyName": "Suspicious Transaction Reporting Policy",
+        "policyCategory": "AML/CFT",
+        "description": "Policy governing the identification, documentation, and reporting of suspicious transactions to Bank Negara Malaysia.",
+        "regulatoryCoverage": {
+          "regulatorReferences": [
+            "AMLA 2001 Section 14",
+            "BNM STR Guidelines 2024",
+            "FATF Recommendation 20"
+          ],
+          "domains": ["AML", "CTF", "Governance"]
+        },
+        "applicability": {
+          "appliesTo": ["Compliance Team", "Operations Staff", "Branch Managers", "MLRO"],
+          "riskLevel": "High"
+        },
+        "requirements": [
+          {
+            "requirementId": "REQ-STR-001",
+            "text": "Report suspicious transactions within 24 hours of confirmation",
+            "type": "Process"
+          },
+          {
+            "requirementId": "REQ-STR-002",
+            "text": "Maintain confidentiality of STR filing - no tipping off",
+            "type": "Governance"
+          },
+          {
+            "requirementId": "REQ-STR-003",
+            "text": "Document internal investigation findings before submission",
+            "type": "Operational"
+          },
+          {
+            "requirementId": "REQ-STR-004",
+            "text": "Submit STR via BNM FINS portal with complete information",
+            "type": "Technical"
+          }
+        ],
+        "procedures": [
+          {
+            "procedureId": "PROC-STR-001",
+            "stepNumber": 1,
+            "text": "Front-line staff identifies unusual activity and raises internal alert"
+          },
+          {
+            "procedureId": "PROC-STR-002",
+            "stepNumber": 2,
+            "text": "Compliance Officer conducts preliminary assessment"
+          },
+          {
+            "procedureId": "PROC-STR-003",
+            "stepNumber": 3,
+            "text": "Gather supporting documentation and transaction history"
+          },
+          {
+            "procedureId": "PROC-STR-004",
+            "stepNumber": 4,
+            "text": "MLRO reviews and approves STR submission"
+          },
+          {
+            "procedureId": "PROC-STR-005",
+            "stepNumber": 5,
+            "text": "Submit STR to BNM via FINS within 24 hours"
+          },
+          {
+            "procedureId": "PROC-STR-006",
+            "stepNumber": 6,
+            "text": "Archive STR and supporting documents for 6 years"
+          }
+        ],
+        "dataInvolved": ["Transaction Details", "Customer Profile", "Account History", "Investigation Notes", "Supporting Documents"],
+        "relatedProducts": ["All Financial Products"],
+        "relatedRisks": ["Regulatory Non-compliance", "Criminal Liability", "Reputational Damage"],
+        "version": "2.1",
+        "lastUpdated": "2024-10-20",
+        "sourcePage": "Internal Policy Document Section 7"
+      },
+      {
+        "policyId": "POL-REC-001",
+        "policyName": "Record Keeping and Retention Policy",
+        "policyCategory": "Compliance",
+        "description": "Policy governing the retention, storage, and disposal of customer records and transaction data in compliance with regulatory requirements.",
+        "regulatoryCoverage": {
+          "regulatorReferences": [
+            "AMLA 2001 Section 17",
+            "BNM Record Keeping Guidelines",
+            "PDPA 2010"
+          ],
+          "domains": ["DataPrivacy", "Governance", "ITSecurity"]
+        },
+        "applicability": {
+          "appliesTo": ["IT Department", "Compliance Team", "Operations", "All Staff"],
+          "riskLevel": "Medium"
+        },
+        "requirements": [
+          {
+            "requirementId": "REQ-REC-001",
+            "text": "Retain all CDD records for minimum 6 years from account closure",
+            "type": "Data"
+          },
+          {
+            "requirementId": "REQ-REC-002",
+            "text": "Store transaction records with full audit trail capability",
+            "type": "Technical"
+          },
+          {
+            "requirementId": "REQ-REC-003",
+            "text": "Ensure records are retrievable within 3 business days upon regulatory request",
+            "type": "Operational"
+          },
+          {
+            "requirementId": "REQ-REC-004",
+            "text": "Implement encryption for records containing personal data",
+            "type": "Technical"
+          }
+        ],
+        "procedures": [
+          {
+            "procedureId": "PROC-REC-001",
+            "stepNumber": 1,
+            "text": "Classify documents based on retention category"
+          },
+          {
+            "procedureId": "PROC-REC-002",
+            "stepNumber": 2,
+            "text": "Store in designated secure repository with access controls"
+          },
+          {
+            "procedureId": "PROC-REC-003",
+            "stepNumber": 3,
+            "text": "Tag with retention period and auto-archive date"
+          },
+          {
+            "procedureId": "PROC-REC-004",
+            "stepNumber": 4,
+            "text": "Conduct quarterly audit of record integrity"
+          },
+          {
+            "procedureId": "PROC-REC-005",
+            "stepNumber": 5,
+            "text": "Securely dispose after retention period with documented approval"
+          }
+        ],
+        "dataInvolved": ["Customer Records", "Transaction Logs", "CDD Documents", "STR Records", "Audit Trails"],
+        "relatedProducts": ["All Products and Services"],
+        "relatedRisks": ["Data Loss", "Regulatory Breach", "Privacy Violation"],
+        "version": "1.5",
+        "lastUpdated": "2024-09-01",
+        "sourcePage": "Internal Policy Document Section 12"
       }
-    }
-  ],
-  "internal_controls": [
-    {
-      "control_id": "CTRL-KYC-CHECK",
-      "name": "New Account KYC Check",
-      "description": "Automated check of ID format and validity upon data entry.",
-      "related_requirements": [
-        "REQ-CDD-01"
-      ],
-      "frequency": "per-transaction",
-      "responsible_role": "Compliance Officer"
-    },
-    {
-      "control_id": "CTRL-SANCTION-DAILY",
-      "name": "Daily Sanctions Screening",
-      "description": "Batch screening of entire customer base against updated sanction lists.",
-      "related_requirements": [
-        "REQ-SCREEN-01"
-      ],
-      "frequency": "daily",
-      "responsible_role": "MLRO"
-    }
-  ],
-  "procedures": [
-    {
-      "procedure_id": "PROC-ONBOARD-INDIVIDUAL",
-      "name": "Individual Customer Onboarding",
-      "steps": [
-        "Collect NRIC/Passport",
-        "Perform facial recognition liveness check (e-KYC)",
-        "Input details into system",
-        "Run sanction screening",
-        "Assign initial risk rating",
-        "Approve or Refer to Compliance"
-      ],
-      "inputs": [
-        "ID Image",
-        "Selfie Video"
-      ],
-      "outputs": [
-        "Approved/Rejected Status",
-        "Risk Score"
-      ]
-    }
-  ],
-  "record_keeping": {
-    "duration_years": "6",
-    "records_required": [
-      "Copy of ID",
-      "Screening Results",
-      "Risk Assessment Form"
-    ],
-    "storage_requirements": "Digital encrypted storage with audit trail."
-  },
-  "exceptions": [
-    {
-      "exception_id": "EXC-LOW-RISK",
-      "allowed_under": "BNM e-Money Guidelines",
-      "conditions": "Wallet limit below RM 200 and total monthly transaction value below RM 1,000."
-    }
-  ],
-  "risk_indicators": [
-    {
-      "indicator_id": "IND-PEPS",
-      "name": "Politically Exposed Person (PEP) Match",
-      "description": "Customer name matches a known PEP list.",
-      "threshold": "Exact Match or Fuzzy Match > 90%"
-    },
-    {
-      "indicator_id": "IND-HIGH-RISK-COUNTRY",
-      "name": "High Risk Country Connection",
-      "description": "Nationality or address linked to FATF high-risk jurisdictions.",
-      "threshold": "Presence in list"
-    }
-  ],
-  "last_updated": "2024-03-10",
-  "effective_date": "2024-04-01",
-  "review_frequency": "12 months"
+    ]
+  }
 }

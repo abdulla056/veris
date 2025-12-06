@@ -1,5 +1,9 @@
 // Type definitions for compliance gap analysis
 
+// =========================================
+// WebData Types (Regulatory Scrape Data)
+// =========================================
+
 export interface WebScrapeData {
   act_name: string;
   jurisdiction: string;
@@ -74,144 +78,126 @@ export interface CrossReference {
   description: string;
 }
 
-// Product Spec Types
+// =========================================
+// ProductSpec Types (Company Product Spec)
+// =========================================
+
+export interface ProductSpecFile {
+  companyProductSpec: ProductSpec;
+}
+
 export interface ProductSpec {
-  product_name: string;
-  version: string;
+  companyName: string;
+  registrationNumber: string;
+  incorporationCountry: string;
   description: string;
-  target_industry: string[];
-  key_features: KeyFeature[];
-  architecture: Architecture;
-  data_pipeline: DataPipeline;
-  risk_management: RiskManagement;
-  regulatory_scope: RegulatoryScope[];
+  industryCategory: string;
+  productName: string;
+  productVersion: string;
+  productDescription: string;
+  submittedAt: string;
+  features: ProductFeature[];
+  financialOperations: FinancialOperation[];
+  thirdPartyIntegrations: ThirdPartyIntegration[];
+  systemArchitecture: SystemArchitecture;
+  knownRisks: string[];
+  keywords: string[];
 }
 
-export interface KeyFeature {
-  id: string;
+export interface ProductFeature {
+  featureId: string;
   name: string;
   description: string;
-  problem_solved: string;
-  regulatory_relevance: string[];
-  dependencies: string[];
-  status: string;
+  dataUsed: string[];
+  userTypes: string[];
+  riskAreas: string[];
+  relatedPolicies: string[];
 }
 
-export interface Architecture {
-  frontend: {
-    type: string;
-    tech_stack: string[];
-  };
-  backend: {
-    services: string[];
-    databases: string[];
-    ai_models: string[];
-    infra: string[];
-  };
+export interface FinancialOperation {
+  opId: string;
+  name: string;
+  type: string;
+  description: string;
+  dataUsed: string[];
+  riskAreas: string[];
+  relatedPolicies: string[];
 }
 
-export interface DataPipeline {
-  inputs: string[];
-  processing: string[];
-  outputs: string[];
+export interface ThirdPartyIntegration {
+  name: string;
+  purpose: string;
+  dataShared: string[];
+  riskAreas: string[];
+  relatedPolicies: string[];
 }
 
-export interface RiskManagement {
-  llm_risks: string[];
-  mitigations: string[];
+export interface SystemArchitecture {
+  frontend: string;
+  backend: string;
+  databases: string[];
+  infrastructure: string[];
+  securityControls: string[];
 }
 
-export interface RegulatoryScope {
-  jurisdiction: string;
-  documents: {
-    name: string;
-    sections_used: string[];
-    last_updated: string;
-    url: string;
-  }[];
+// =========================================
+// ProductPolicy Types (Company Policy Spec)
+// =========================================
+
+export interface ProductPolicyFile {
+  companyPolicySpec: CompanyPolicySpec;
 }
 
-// Product Policy Types
+export interface CompanyPolicySpec {
+  companyName: string;
+  submissionId: string;
+  submittedAt: string;
+  policies: ProductPolicy[];
+}
+
 export interface ProductPolicy {
-  policy_id: string;
-  policy_name: string;
-  policy_type: string;
-  jurisdiction: string;
-  source_document: {
-    title: string;
-    url: string;
-    section: string;
-    excerpt: string;
-  };
+  policyId: string;
+  policyName: string;
+  policyCategory: string;
   description: string;
-  requirements: Requirement[];
-  obligations: PolicyObligation[];
-  internal_controls: InternalControl[];
+  regulatoryCoverage: RegulatoryCoverage;
+  applicability: PolicyApplicability;
+  requirements: PolicyRequirement[];
   procedures: PolicyProcedure[];
-  record_keeping: RecordKeeping;
-  exceptions: PolicyException[];
-  risk_indicators: RiskIndicator[];
-  last_updated: string;
-  effective_date: string;
-  review_frequency: string;
+  dataInvolved: string[];
+  relatedProducts: string[];
+  relatedRisks: string[];
+  version: string;
+  lastUpdated: string;
+  sourcePage: string;
 }
 
-export interface Requirement {
-  requirement_id: string;
+export interface RegulatoryCoverage {
+  regulatorReferences: string[];
+  domains: string[];
+}
+
+export interface PolicyApplicability {
+  appliesTo: string[];
+  riskLevel: 'Low' | 'Medium' | 'High' | string;
+}
+
+export interface PolicyRequirement {
+  requirementId: string;
   text: string;
-  risk_level: string;
-  category: string;
-}
-
-export interface PolicyObligation {
-  obligation_id: string;
-  summary: string;
-  detailed_text: string;
-  violations_if_unmet: string[];
-  penalties: {
-    fine: string;
-    imprisonment: string;
-    regulator: string;
-  };
-}
-
-export interface InternalControl {
-  control_id: string;
-  name: string;
-  description: string;
-  related_requirements: string[];
-  frequency: string;
-  responsible_role: string;
+  type: 'Process' | 'Data' | 'Operational' | 'Technical' | 'HR' | 'Governance' | string;
 }
 
 export interface PolicyProcedure {
-  procedure_id: string;
-  name: string;
-  steps: string[];
-  inputs: string[];
-  outputs: string[];
+  procedureId: string;
+  stepNumber: number;
+  text: string;
 }
 
-export interface RecordKeeping {
-  duration_years: string;
-  records_required: string[];
-  storage_requirements: string;
-}
-
-export interface PolicyException {
-  exception_id: string;
-  allowed_under: string;
-  conditions: string;
-}
-
-export interface RiskIndicator {
-  indicator_id: string;
-  name: string;
-  description: string;
-  threshold: string;
-}
-
+// =========================================
 // Gap Analysis Types
+// =========================================
+
 export interface ComplianceGap {
   gap_id: string;
   gap_type: 'missing_feature' | 'missing_policy' | 'incomplete_coverage' | 'misaligned_requirement';
@@ -239,6 +225,7 @@ export interface ComplianceGap {
 export interface GapAnalysisResult {
   audit_id: string;
   audit_date: string;
+  company_name: string;
   product_name: string;
   regulation_source: string;
   gaps_found: ComplianceGap[];
@@ -253,4 +240,3 @@ export interface GapAnalysisResult {
   recommendations_summary: string;
   next_review_date: string;
 }
-

@@ -4,7 +4,13 @@
  */
 
 import { ComplianceGapAnalyzer } from '@/lib/compliance-gap-analyzer';
-import type { WebScrapeData, ProductSpec, ProductPolicy } from '@/lib/types/compliance';
+import type { 
+  WebScrapeData, 
+  ProductSpec, 
+  CompanyPolicySpec,
+  ProductSpecFile,
+  ProductPolicyFile 
+} from '@/lib/types/compliance';
 
 // Example 1: Basic Usage
 async function basicExample() {
@@ -18,20 +24,23 @@ async function basicExample() {
   } as WebScrapeData;
 
   const productSpec: ProductSpec = {
-    product_name: "My Product",
+    companyName: "My Company",
+    productName: "My Product",
     // ... rest of data
   } as ProductSpec;
 
-  const productPolicy: ProductPolicy = {
-    policy_name: "My Policy",
-    // ... rest of data
-  } as ProductPolicy;
+  const companyPolicies: CompanyPolicySpec = {
+    companyName: "My Company",
+    submissionId: "SUB-001",
+    submittedAt: new Date().toISOString(),
+    policies: [],
+  };
 
   // Run analysis
   const result = await analyzer.analyzeGaps(
     regulations,
     productSpec,
-    productPolicy
+    companyPolicies
   );
 
   console.log(`Compliance Score: ${result.compliance_score}/100`);
@@ -47,11 +56,11 @@ async function uploadHandlerExample(
   // 1. Parse uploaded files (you'd use a PDF parser)
   const regulations = await parseRegulationsFromPDF(regulationsFile);
   const productSpec = await parseProductSpecFromPDF(productSpecFile);
-  const policy = await parsePolicyFromPDF(policyFile);
+  const companyPolicies = await parsePolicyFromPDF(policyFile);
 
   // 2. Run analysis
   const analyzer = new ComplianceGapAnalyzer();
-  const result = await analyzer.analyzeGaps(regulations, productSpec, policy);
+  const result = await analyzer.analyzeGaps(regulations, productSpec, companyPolicies);
 
   // 3. Return to frontend
   return {
@@ -72,7 +81,7 @@ export async function POST(request: Request) {
     const result = await analyzer.analyzeGaps(
       body.regulations,
       body.productSpec,
-      body.productPolicy
+      body.companyPolicies
     );
 
     // Save to database
@@ -82,21 +91,54 @@ export async function POST(request: Request) {
     return Response.json(result);
   } catch (error) {
     return Response.json(
-      { error: 'Analysis failed', details: error.message },
+      { error: 'Analysis failed', details: (error as Error).message },
       { status: 500 }
     );
   }
 }
 
-// Example 4: Generate and Save Report
-async function generateReportExample() {
+// Example 4: Loading from JSON files (with wrapper objects)
+async function loadFromJsonFilesExample() {
+  const analyzer = new ComplianceGapAnalyzer();
+
+  // Load files with wrapper objects
+  const productSpecFile: ProductSpecFile = JSON.parse(
+    await readFile('product_spec.json')
+  );
+  const productPolicyFile: ProductPolicyFile = JSON.parse(
+    await readFile('product_policy.json')
+  );
+  const webScrapeData: WebScrapeData = JSON.parse(
+    await readFile('web_scrape.json')
+  );
+
+  // Unwrap the nested objects
+  const productSpec = productSpecFile.companyProductSpec;
+  const companyPolicies = productPolicyFile.companyPolicySpec;
+
+  // Run analysis
+  const result = await analyzer.analyzeGaps(
+    webScrapeData,
+    productSpec,
+    companyPolicies
+  );
+
+  return result;
+}
+
+// Example 5: Generate and Save Report
+async function generateReportExample(
+  regulations: WebScrapeData,
+  productSpec: ProductSpec,
+  companyPolicies: CompanyPolicySpec
+) {
   const analyzer = new ComplianceGapAnalyzer();
 
   // Run analysis
   const result = await analyzer.analyzeGaps(
     regulations,
     productSpec,
-    productPolicy
+    companyPolicies
   );
 
   // Generate human-readable report
@@ -106,14 +148,18 @@ async function generateReportExample() {
   const jsonReport = analyzer.exportToJSON(result);
 
   // Save to files
-  await fs.writeFile(`reports/${result.audit_id}.txt`, textReport);
-  await fs.writeFile(`reports/${result.audit_id}.json`, jsonReport);
+  await writeFile(`reports/${result.audit_id}.txt`, textReport);
+  await writeFile(`reports/${result.audit_id}.json`, jsonReport);
 
   return result;
 }
 
-// Example 5: Real-time Progress Updates
-async function progressUpdatesExample() {
+// Example 6: Real-time Progress Updates
+async function progressUpdatesExample(
+  regulations: WebScrapeData,
+  productSpec: ProductSpec,
+  companyPolicies: CompanyPolicySpec
+) {
   const analyzer = new ComplianceGapAnalyzer();
 
   // You can wrap the analyzer to emit progress
@@ -133,19 +179,23 @@ async function progressUpdatesExample() {
   const result = await analyzer.analyzeGaps(
     regulations,
     productSpec,
-    productPolicy
+    companyPolicies
   );
 
   return result;
 }
 
-// Example 6: Filtering Results by Severity
-async function filterBySeverityExample() {
+// Example 7: Filtering Results by Severity
+async function filterBySeverityExample(
+  regulations: WebScrapeData,
+  productSpec: ProductSpec,
+  companyPolicies: CompanyPolicySpec
+) {
   const analyzer = new ComplianceGapAnalyzer();
   const result = await analyzer.analyzeGaps(
     regulations,
     productSpec,
-    productPolicy
+    companyPolicies
   );
 
   // Get only critical and high severity gaps
@@ -165,16 +215,16 @@ async function filterBySeverityExample() {
   return { urgentGaps, allGaps: result.gaps_found };
 }
 
-// Example 7: Batch Analysis of Multiple Products
-async function batchAnalysisExample() {
+// Example 8: Batch Analysis of Multiple Products
+async function batchAnalysisExample(
+  regulations: WebScrapeData,
+  products: Array<{
+    name: string;
+    spec: ProductSpec;
+    policies: CompanyPolicySpec;
+  }>
+) {
   const analyzer = new ComplianceGapAnalyzer();
-
-  const products = [
-    { name: 'Product A', spec: productSpecA, policy: policyA },
-    { name: 'Product B', spec: productSpecB, policy: policyB },
-    { name: 'Product C', spec: productSpecC, policy: policyC },
-  ];
-
   const results = [];
 
   for (const product of products) {
@@ -183,7 +233,7 @@ async function batchAnalysisExample() {
     const result = await analyzer.analyzeGaps(
       regulations,
       product.spec,
-      product.policy
+      product.policies
     );
 
     results.push({
@@ -213,32 +263,42 @@ async function parseProductSpecFromPDF(file: File): Promise<ProductSpec> {
   throw new Error('Not implemented');
 }
 
-async function parsePolicyFromPDF(file: File): Promise<ProductPolicy> {
+async function parsePolicyFromPDF(file: File): Promise<CompanyPolicySpec> {
   throw new Error('Not implemented');
 }
 
-async function saveAuditResult(result: any) {
+async function saveAuditResult(result: unknown) {
   // Save to your database
   throw new Error('Not implemented');
 }
 
-async function emitProgress(progress: any) {
+async function emitProgress(progress: unknown) {
   // Send via WebSocket or Server-Sent Events
   console.log('Progress:', progress);
 }
 
-async function sendAlertEmail(options: any) {
+async function sendAlertEmail(options: unknown) {
   // Send email via SendGrid, etc.
   console.log('Alert sent:', options);
+}
+
+async function readFile(path: string): Promise<string> {
+  // Read file from filesystem
+  throw new Error('Not implemented');
+}
+
+async function writeFile(path: string, content: string): Promise<void> {
+  // Write file to filesystem
+  throw new Error('Not implemented');
 }
 
 // Export examples
 export {
   basicExample,
   uploadHandlerExample,
+  loadFromJsonFilesExample,
   generateReportExample,
   progressUpdatesExample,
   filterBySeverityExample,
   batchAnalysisExample,
 };
-

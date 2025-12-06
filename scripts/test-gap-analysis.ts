@@ -2,10 +2,11 @@
 /**
  * Test script for Compliance Gap Analyzer
  * Demonstrates semantic matching between regulations and product/policy
+ * Results are stored in Convex database
  */
 
 import { ComplianceGapAnalyzer } from '../lib/compliance-gap-analyzer';
-import type { WebScrapeData, ProductSpec, ProductPolicy } from '../lib/types/compliance';
+import type { WebScrapeData, ProductSpecFile, ProductPolicyFile } from '../lib/types/compliance';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -30,23 +31,58 @@ const mockDataDir = path.join(process.cwd(), 'mock_data');
 
 console.log('📁 Loading mock data...\n');
 
+// WebScrapeData is already in the correct format (no wrapper)
 const webScrapeData: WebScrapeData = JSON.parse(
   fs.readFileSync(path.join(mockDataDir, 'web_scrape.json'), 'utf-8')
 );
 
-const productSpec: ProductSpec = JSON.parse(
+// ProductSpec needs to be unwrapped from { companyProductSpec: {...} }
+const productSpecFile: ProductSpecFile = JSON.parse(
   fs.readFileSync(path.join(mockDataDir, 'product_spec.json'), 'utf-8')
 );
+const productSpec = productSpecFile.companyProductSpec;
 
-const productPolicy: ProductPolicy = JSON.parse(
+// ProductPolicy needs to be unwrapped from { companyPolicySpec: {...} }
+const productPolicyFile: ProductPolicyFile = JSON.parse(
   fs.readFileSync(path.join(mockDataDir, 'product_policy.json'), 'utf-8')
 );
+const companyPolicies = productPolicyFile.companyPolicySpec;
 
 console.log('✅ Data loaded successfully');
 console.log(`   • Regulation: ${webScrapeData.act_name}`);
-console.log(`   • Product: ${productSpec.product_name}`);
-console.log(`   • Policy: ${productPolicy.policy_name}`);
+console.log(`   • Company: ${productSpec.companyName}`);
+console.log(`   • Product: ${productSpec.productName}`);
+console.log(`   • Policies: ${companyPolicies.policies.length} policies loaded`);
 console.log('');
+
+async function storeInConvex(result: ReturnType<ComplianceGapAnalyzer['analyzeGaps']> extends Promise<infer T> ? T : never) {
+  const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
+  
+  if (!convexUrl) {
+    console.warn('⚠️  NEXT_PUBLIC_CONVEX_URL not set - skipping Convex storage');
+    return null;
+  }
+
+  try {
+    // Use dynamic import for ConvexHttpClient
+    const { ConvexHttpClient } = await import('convex/browser');
+    const convex = new ConvexHttpClient(convexUrl);
+    
+    // Import the API
+    const { api } = await import('../convex/_generated/api');
+    
+    // Store in Convex
+    const convexId = await convex.mutation(
+      api.complianceAnalysis.createFromAnalyzerResult,
+      result
+    );
+    
+    return convexId;
+  } catch (error) {
+    console.error('❌ Failed to store in Convex:', error);
+    return null;
+  }
+}
 
 async function runAnalysis() {
   // Check for API key
@@ -71,7 +107,7 @@ async function runAnalysis() {
     const result = await analyzer.analyzeGaps(
       webScrapeData,
       productSpec,
-      productPolicy
+      companyPolicies
     );
 
     console.log('\n');
@@ -82,26 +118,20 @@ async function runAnalysis() {
     const report = analyzer.generateReport(result);
     console.log(report);
 
-    // Save results
-    const outputDir = path.join(process.cwd(), 'analysis_results');
-    if (!fs.existsSync(outputDir)) {
-      fs.mkdirSync(outputDir, { recursive: true });
+    // Store in Convex
+    console.log('\n💾 Storing results in Convex...');
+    const convexId = await storeInConvex(result);
+    
+    if (convexId) {
+      console.log(`✅ Results stored in Convex with ID: ${convexId}`);
+    } else {
+      console.log('⚠️  Results not stored in Convex (see warnings above)');
     }
 
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const jsonPath = path.join(outputDir, `gap_analysis_${timestamp}.json`);
-    const reportPath = path.join(outputDir, `gap_analysis_${timestamp}.txt`);
-
-    fs.writeFileSync(jsonPath, analyzer.exportToJSON(result));
-    fs.writeFileSync(reportPath, report);
-
-    console.log('\n💾 Results saved:');
-    console.log(`   • JSON: ${jsonPath}`);
-    console.log(`   • Report: ${reportPath}`);
-    console.log('');
-
     // Display quick summary
-    console.log('📈 QUICK SUMMARY:');
+    console.log('\n📈 QUICK SUMMARY:');
+    console.log(`   Company: ${result.company_name}`);
+    console.log(`   Product: ${result.product_name}`);
     console.log(`   Compliance Score: ${result.compliance_score}/100`);
     console.log(`   Total Gaps: ${result.summary.total_gaps}`);
     console.log(`   Critical: ${result.summary.critical_gaps} | High: ${result.summary.high_gaps} | Medium: ${result.summary.medium_gaps} | Low: ${result.summary.low_gaps}`);
@@ -117,6 +147,9 @@ async function runAnalysis() {
       console.log('🔴 Critical compliance issues detected. Urgent remediation required.');
     }
 
+    // Return the result for programmatic use
+    return result;
+
   } catch (error) {
     console.error('\n❌ Error during analysis:', error);
     process.exit(1);
@@ -125,4 +158,3 @@ async function runAnalysis() {
 
 // Run the analysis
 runAnalysis();
-
