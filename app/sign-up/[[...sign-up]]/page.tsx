@@ -1,5 +1,5 @@
 import { SignUp } from "@clerk/nextjs";
-import Image from "next/image";
+import { LogoIcon } from "@/components/logo-icon";
 
 export default function SignUpPage() {
   return (
@@ -8,14 +8,7 @@ export default function SignUpPage() {
         <div className="mb-8 text-center">
           {/* Logo */}
           <div className="flex justify-center mb-4">
-            <Image 
-              src="/logo.png" 
-              alt="MyComply.ai" 
-              width={220} 
-              height={70}
-              className="h-20 w-auto"
-              priority
-            />
+            <LogoIcon size="xl" showText={true} />
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
             Malaysian Fintech AML/CFT Compliance Platform

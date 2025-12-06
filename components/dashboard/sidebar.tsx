@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -10,6 +9,7 @@ import {
   Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LogoIcon } from "@/components/logo-icon";
 
 const navItems = [
   {
@@ -41,14 +41,7 @@ export function DashboardSidebar() {
     <div className="flex h-full w-64 flex-col border-r bg-sidebar">
       {/* Logo/Brand */}
       <div className="flex h-16 items-center justify-center border-b px-4">
-        <Image 
-          src="/logo.png" 
-          alt="MyComply.ai" 
-          width={160} 
-          height={48}
-          className="h-12 w-auto"
-          priority
-        />
+        <LogoIcon size="md" showText={true} />
       </div>
 
       {/* Navigation */}

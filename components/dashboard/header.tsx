@@ -2,9 +2,10 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Bell, ShieldCheck, Sparkles } from "lucide-react";
+import { Bell, Sparkles } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
+import { LogoIcon } from "@/components/logo-icon";
 
 export function DashboardHeader() {
   const { user } = useUser();
@@ -36,13 +37,11 @@ export function DashboardHeader() {
       {/* Left Section - Branding */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 shadow-lg shadow-emerald-500/20">
-            <ShieldCheck className="h-6 w-6 text-white" />
-          </div>
+          <LogoIcon size="md" showText={false} />
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-bold text-foreground">
-                Compliance Co-Pilot
+                MyComply.ai
               </h1>
               <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-medium px-2 py-0.5">
                 <Sparkles className="h-3 w-3 mr-1" />
