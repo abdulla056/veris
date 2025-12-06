@@ -2,7 +2,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import type {
   WebScrapeData,
   ProductSpec,
-  ProductPolicy,
+  CompanyPolicySpec,
   ComplianceGap,
   GapAnalysisResult,
   Obligation,
@@ -27,7 +27,7 @@ export class ComplianceGapAnalyzer {
   async analyzeGaps(
     regulations: WebScrapeData,
     productSpec: ProductSpec,
-    productPolicy: ProductPolicy
+    companyPolicies: CompanyPolicySpec
   ): Promise<GapAnalysisResult> {
     const auditId = `AUD-${Date.now()}`;
     const auditDate = new Date().toISOString();
@@ -45,7 +45,7 @@ export class ComplianceGapAnalyzer {
         obligation,
         regulations,
         productSpec,
-        productPolicy
+        companyPolicies
       );
 
       if (gap) {
@@ -76,7 +76,8 @@ export class ComplianceGapAnalyzer {
     return {
       audit_id: auditId,
       audit_date: auditDate,
-      product_name: productSpec.product_name,
+      company_name: productSpec.companyName,
+      product_name: productSpec.productName,
       regulation_source: regulations.act_name,
       gaps_found: gaps,
       compliance_score: complianceScore,
@@ -93,20 +94,20 @@ export class ComplianceGapAnalyzer {
     obligation: Obligation,
     regulations: WebScrapeData,
     productSpec: ProductSpec,
-    productPolicy: ProductPolicy
+    companyPolicies: CompanyPolicySpec
   ): Promise<ComplianceGap | null> {
     const prompt = this.buildAnalysisPrompt(
       obligation,
       regulations,
       productSpec,
-      productPolicy
+      companyPolicies
     );
 
     try {
       const response = await this.anthropic.messages.create({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 2000,
-        temperature: 0.3, // Lower temperature for more consistent analysis
+        max_tokens: 4096,
+        temperature: 0.2, // Lower temperature for more consistent JSON output
         messages: [
           {
             role: 'user',
@@ -135,7 +136,21 @@ export class ComplianceGapAnalyzer {
         jsonText = jsonMatch[0];
       }
 
-      const analysis = JSON.parse(jsonText);
+      // Sanitize common JSON issues from LLM output
+      // Remove trailing commas before } or ]
+      jsonText = jsonText.replace(/,(\s*[}\]])/g, '$1');
+      // Remove any control characters except newlines and tabs
+      jsonText = jsonText.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
+
+      let analysis;
+      try {
+        analysis = JSON.parse(jsonText);
+      } catch (parseError) {
+        console.error('Failed to parse JSON response:', jsonText.substring(0, 500));
+        // Return a default "no gap" response if parsing fails
+        console.warn(`Skipping obligation "${obligation.name}" due to JSON parse error`);
+        return null;
+      }
 
       // If Claude determines there's a gap, create a ComplianceGap object
       if (analysis.has_gap) {
@@ -176,11 +191,40 @@ export class ComplianceGapAnalyzer {
     obligation: Obligation,
     regulations: WebScrapeData,
     productSpec: ProductSpec,
-    productPolicy: ProductPolicy
+    companyPolicies: CompanyPolicySpec
   ): string {
+    // Build features summary
+    const featuresDescription = productSpec.features
+      .map(f => `- ${f.name}: ${f.description}\n  Risk Areas: ${f.riskAreas.join(', ')}\n  Related Policies: ${f.relatedPolicies.join(', ')}`)
+      .join('\n');
+
+    // Build financial operations summary
+    const financialOpsDescription = productSpec.financialOperations
+      .map(op => `- ${op.name} (${op.type}): ${op.description}\n  Risk Areas: ${op.riskAreas.join(', ')}`)
+      .join('\n');
+
+    // Build policies summary
+    const policiesDescription = companyPolicies.policies
+      .map(p => {
+        const requirements = p.requirements.map(r => `    - [${r.type}] ${r.text}`).join('\n');
+        const procedures = p.procedures.map(proc => `    ${proc.stepNumber}. ${proc.text}`).join('\n');
+        return `**${p.policyName}** (${p.policyCategory})
+  Description: ${p.description}
+  Risk Level: ${p.applicability.riskLevel}
+  Regulatory References: ${p.regulatoryCoverage.regulatorReferences.join(', ')}
+  Domains: ${p.regulatoryCoverage.domains.join(', ')}
+  
+  Requirements:
+${requirements}
+  
+  Procedures:
+${procedures}`;
+      })
+      .join('\n\n');
+
     return `You are an expert regulatory compliance auditor specializing in Malaysian banking and AML/CFT regulations.
 
-Your task is to perform a detailed semantic analysis to determine if the product specification and internal policy adequately address a specific regulatory obligation.
+Your task is to perform a detailed semantic analysis to determine if the product specification and internal policies adequately address a specific regulatory obligation.
 
 # REGULATORY OBLIGATION TO ANALYZE:
 
@@ -191,46 +235,40 @@ Your task is to perform a detailed semantic analysis to determine if the product
 **Risk Level:** ${obligation.risk_level}
 **Regulation:** ${regulations.act_name}
 
-# PRODUCT SPECIFICATION:
+# COMPANY & PRODUCT INFORMATION:
 
-**Product:** ${productSpec.product_name}
-**Description:** ${productSpec.description}
+**Company:** ${productSpec.companyName}
+**Registration:** ${productSpec.registrationNumber}
+**Industry:** ${productSpec.industryCategory}
+**Product:** ${productSpec.productName} (v${productSpec.productVersion})
+**Description:** ${productSpec.productDescription}
 
-**Key Features:**
-${productSpec.key_features.map(f => `- ${f.name}: ${f.description}\n  Regulatory Relevance: ${f.regulatory_relevance.join(', ')}`).join('\n')}
+**Product Features:**
+${featuresDescription}
 
-**Data Pipeline:**
-- Inputs: ${productSpec.data_pipeline.inputs.join(', ')}
-- Processing: ${productSpec.data_pipeline.processing.join(', ')}
-- Outputs: ${productSpec.data_pipeline.outputs.join(', ')}
+**Financial Operations:**
+${financialOpsDescription}
 
-**Risk Management:**
-- Risks: ${productSpec.risk_management.llm_risks.join(', ')}
-- Mitigations: ${productSpec.risk_management.mitigations.join(', ')}
+**Third-Party Integrations:**
+${productSpec.thirdPartyIntegrations.map(t => `- ${t.name}: ${t.purpose}`).join('\n')}
 
-# CURRENT INTERNAL POLICY:
+**System Architecture:**
+- Frontend: ${productSpec.systemArchitecture.frontend}
+- Backend: ${productSpec.systemArchitecture.backend}
+- Security Controls: ${productSpec.systemArchitecture.securityControls.join(', ')}
 
-**Policy:** ${productPolicy.policy_name}
-**Description:** ${productPolicy.description}
+**Known Risks:**
+${productSpec.knownRisks.map(r => `- ${r}`).join('\n')}
 
-**Requirements:**
-${productPolicy.requirements.map(r => `- [${r.category}] ${r.text} (Risk: ${r.risk_level})`).join('\n')}
+# COMPANY POLICIES:
 
-**Internal Controls:**
-${productPolicy.internal_controls.map(c => `- ${c.name}: ${c.description} (Frequency: ${c.frequency})`).join('\n')}
-
-**Procedures:**
-${productPolicy.procedures.map(p => `- ${p.name}: ${p.steps.join(' → ')}`).join('\n')}
-
-**Record Keeping:**
-- Duration: ${productPolicy.record_keeping.duration_years} years
-- Records: ${productPolicy.record_keeping.records_required.join(', ')}
+${policiesDescription}
 
 # ANALYSIS INSTRUCTIONS:
 
 Perform a thorough semantic analysis to determine:
 
-1. **Coverage Analysis:** Does the product specification and/or internal policy adequately address this regulatory obligation?
+1. **Coverage Analysis:** Does the product specification and/or internal policies adequately address this regulatory obligation?
 2. **Gap Detection:** Are there any missing elements, incomplete implementations, or misaligned requirements?
 3. **Risk Assessment:** What are the regulatory, financial, and operational risks if this gap exists?
 
@@ -257,12 +295,12 @@ Respond ONLY with valid JSON in this exact format:
 
 # ANALYSIS CRITERIA:
 
-- If the product/policy **fully addresses** the obligation with appropriate controls: has_gap = false
+- If the product/policies **fully address** the obligation with appropriate controls: has_gap = false
 - If there's **no mention** of this obligation: has_gap = true, severity = "critical" or "high"
 - If there's **partial coverage** but missing key elements: has_gap = true, severity = "medium"
 - If coverage is adequate but could be improved: has_gap = true, severity = "low"
 
-Be precise and cite specific elements from the product spec or policy in your analysis.`;
+Be precise and cite specific elements from the product spec or policies in your analysis.`;
   }
 
   /**
@@ -356,6 +394,7 @@ Provide a brief, actionable summary for executives.`;
 
 Audit ID: ${result.audit_id}
 Date: ${new Date(result.audit_date).toLocaleString()}
+Company: ${result.company_name}
 Product: ${result.product_name}
 Regulation: ${result.regulation_source}
 
@@ -430,4 +469,3 @@ Report Generated: ${new Date().toLocaleString()}
     return report;
   }
 }
-

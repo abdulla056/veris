@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ConvexClientProvider } from "./providers";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
@@ -25,12 +26,14 @@ export default function RootLayout({
         <body
           className={`${inter.variable} font-sans antialiased`}
         >
-          <ThemeProvider
-            defaultTheme="light"
-            storageKey="veris-theme"
-        >
-          {children}
-          </ThemeProvider>
+          <ConvexClientProvider>
+            <ThemeProvider
+              defaultTheme="light"
+              storageKey="veris-theme"
+            >
+              {children}
+            </ThemeProvider>
+          </ConvexClientProvider>
         </body>
       </html>
     </ClerkProvider>
