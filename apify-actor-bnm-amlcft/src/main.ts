@@ -10,11 +10,14 @@ import { Actor, log } from 'apify';
 import { ActorInput } from './types.js';
 import { runScraper } from './scraper.js';
 import { processWithClaude, ComplianceData } from './claude-processor.js';
+import { uploadToConvex } from './convex-uploader.js';
 import pdf from 'pdf-parse';
 
 interface ExtendedInput extends ActorInput {
   anthropicApiKey?: string;
   processWithClaude?: boolean;
+  convexUrl?: string;
+  uploadToConvex?: boolean;
 }
 
 await Actor.init();
@@ -35,6 +38,8 @@ try {
     pdfKeywords: rawInput.pdfKeywords ?? [],
     anthropicApiKey: rawInput.anthropicApiKey,
     processWithClaude: rawInput.processWithClaude ?? true,
+    convexUrl: rawInput.convexUrl,
+    uploadToConvex: rawInput.uploadToConvex ?? true,
   };
   
   log.info('Configuration:', {
@@ -42,6 +47,8 @@ try {
     maxPdfsToDownload: input.maxPdfsToDownload || 'unlimited',
     processWithClaude: input.processWithClaude,
     hasApiKey: !!input.anthropicApiKey,
+    uploadToConvex: input.uploadToConvex,
+    hasConvexUrl: !!input.convexUrl,
   });
 
   // Step 1: Download PDFs
@@ -153,6 +160,26 @@ try {
     log.info(`Processed: ${complianceResults.length} PDFs`);
     log.info(`Successful: ${complianceResults.filter(r => r.status === 'success').length}`);
     log.info(`Failed: ${complianceResults.filter(r => r.status !== 'success').length}`);
+
+    // Step 4: Upload to Convex if configured
+    if (input.uploadToConvex && input.convexUrl) {
+      log.info('========================================');
+      log.info('Step 3: Uploading to Convex...');
+      log.info('========================================');
+
+      const convexStats = await uploadToConvex(complianceResults, {
+        deploymentUrl: input.convexUrl,
+      });
+
+      log.info(`Convex upload: ${convexStats.uploaded} uploaded, ${convexStats.failed} failed`);
+      
+      if (convexStats.errors.length > 0) {
+        log.warning('Convex upload errors:', { errors: convexStats.errors });
+      }
+    } else if (input.uploadToConvex && !input.convexUrl) {
+      log.warning('Convex upload enabled but no CONVEX_URL provided');
+      log.info('To upload to Convex, provide your deployment URL in the input');
+    }
 
   } else if (input.processWithClaude && !input.anthropicApiKey) {
     log.warning('Claude processing enabled but no API key provided');

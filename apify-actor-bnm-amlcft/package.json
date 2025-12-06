@@ -39,7 +39,8 @@
     "typescript": "^5.7.2",
     "@types/node": "^22.10.1",
     "@types/pdf-parse": "^1.1.4",
-    "@anthropic-ai/sdk": "^0.32.1"
+    "@anthropic-ai/sdk": "^0.32.1",
+    "convex": "^1.17.4"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",

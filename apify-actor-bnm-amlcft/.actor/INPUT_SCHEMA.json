@@ -57,6 +57,20 @@
       "description": "Your Anthropic API key for Claude. Get one at https://console.anthropic.com/",
       "editor": "textfield",
       "isSecret": true
+    },
+    "uploadToConvex": {
+      "title": "Upload to Convex Database",
+      "type": "boolean",
+      "description": "Upload extracted compliance data to your Convex database",
+      "default": true,
+      "sectionCaption": "Convex Database Settings",
+      "sectionDescription": "Configure Convex database for storing compliance data"
+    },
+    "convexUrl": {
+      "title": "Convex Deployment URL",
+      "type": "string",
+      "description": "Your Convex deployment URL (e.g., https://your-project.convex.cloud). Find it in your Convex dashboard.",
+      "editor": "textfield"
     }
   },
   "required": []
