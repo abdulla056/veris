@@ -36,7 +36,7 @@ export function DashboardHeader() {
       {/* Left Section - Branding */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-primary to-primary/70 shadow-lg shadow-primary/20">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 shadow-lg shadow-emerald-500/20">
             <ShieldCheck className="h-6 w-6 text-white" />
           </div>
           <div>
@@ -44,13 +44,13 @@ export function DashboardHeader() {
               <h1 className="text-xl font-bold text-foreground">
                 Compliance Co-Pilot
               </h1>
-              <Badge variant="secondary" className="bg-primary/10 text-primary text-xs font-medium px-2 py-0.5">
+              <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-medium px-2 py-0.5">
                 <Sparkles className="h-3 w-3 mr-1" />
                 AI-Powered
               </Badge>
             </div>
             <p className="text-xs text-muted-foreground font-medium">
-              Malaysian Banking Sector • AML/CFT Compliance
+              Malaysian Fintech • AML/CFT Gap Analysis
             </p>
           </div>
         </div>

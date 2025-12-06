@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Upload,
   FileText,
-  Database,
   Settings,
-  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -29,11 +28,6 @@ const navItems = [
     icon: FileText,
   },
   {
-    title: "BNM Regulatory Database",
-    href: "/regulatory",
-    icon: Database,
-  },
-  {
     title: "Settings",
     href: "/settings",
     icon: Settings,
@@ -46,11 +40,15 @@ export function DashboardSidebar() {
   return (
     <div className="flex h-full w-64 flex-col border-r bg-sidebar">
       {/* Logo/Brand */}
-      <div className="flex h-16 items-center gap-2 border-b px-6">
-        <ShieldCheck className="h-6 w-6 text-primary" />
-        <span className="text-lg font-semibold text-sidebar-foreground">
-          Compliance AI
-        </span>
+      <div className="flex h-16 items-center justify-center border-b px-4">
+        <Image 
+          src="/logo.png" 
+          alt="MyComply.ai" 
+          width={160} 
+          height={48}
+          className="h-12 w-auto"
+          priority
+        />
       </div>
 
       {/* Navigation */}
@@ -80,8 +78,8 @@ export function DashboardSidebar() {
       {/* Footer Info */}
       <div className="border-t p-4">
         <div className="rounded-lg bg-sidebar-accent p-3">
-          <p className="text-xs font-medium text-sidebar-accent-foreground">BNM Compliance</p>
-          <p className="text-xs text-sidebar-accent-foreground/70">Last Updated: Dec 2025</p>
+          <p className="text-xs font-medium text-sidebar-accent-foreground">MyComply.ai</p>
+          <p className="text-xs text-sidebar-accent-foreground/70">BNM Compliance • Dec 2025</p>
         </div>
       </div>
     </div>

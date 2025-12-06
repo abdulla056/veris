@@ -11,8 +11,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Compliance Co-Pilot | Malaysian Banking AML Dashboard",
-  description: "AI-powered compliance dashboard for Malaysian banking sector AML/CFT regulation checks",
+  title: "MyComply.ai | Malaysian Fintech AML/CFT Compliance",
+  description: "AI-powered compliance platform for Malaysian fintech sector - automated AML/CFT gap analysis and regulatory compliance",
 };
 
 export default function RootLayout({
