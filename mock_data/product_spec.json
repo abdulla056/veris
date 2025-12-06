@@ -1,0 +1,146 @@
+{
+  "product_name": "Veris Compliance Engine",
+  "version": "1.0.0-beta",
+  "description": "An AI-powered regulatory compliance platform designed to automate AML/CFT obligations for Malaysian financial institutions.",
+  "target_industry": [
+    "fintech",
+    "banking",
+    "regtech"
+  ],
+  "key_features": [
+    {
+      "id": "FEAT-001",
+      "name": "Automated Regulatory Scanning",
+      "description": "Continuously scrapes and parses BNM and SC regulations to identify new obligations.",
+      "problem_solved": "Manual tracking of regulatory changes is slow and error-prone.",
+      "regulatory_relevance": [
+        "AMLA",
+        "BNM Policy Documents"
+      ],
+      "dependencies": [
+        "scraper",
+        "LLM"
+      ],
+      "status": "in-development"
+    },
+    {
+      "id": "FEAT-002",
+      "name": "Intelligent Policy Gap Analysis",
+      "description": "Compares internal bank policies against the latest parsed regulations to highlight gaps.",
+      "problem_solved": "Identifying where internal SOPs fall short of new laws.",
+      "regulatory_relevance": [
+        "Audit Requirements",
+        "Internal Controls"
+      ],
+      "dependencies": [
+        "LLM",
+        "Convex DB",
+        "Vector Search"
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "FEAT-003",
+      "name": "Real-time Risk Scoring",
+      "description": "Assigns risk scores to customer profiles based on CDD data and sanctions lists.",
+      "problem_solved": "Inconsistent risk assessment by human officers.",
+      "regulatory_relevance": [
+        "KYC",
+        "CDD",
+        "AML/CFT"
+      ],
+      "dependencies": [
+        "Convex DB"
+      ],
+      "status": "completed"
+    }
+  ],
+  "architecture": {
+    "frontend": {
+      "type": "Web Application",
+      "tech_stack": [
+        "Next.js",
+        "React",
+        "Tailwind CSS",
+        "Shadcn UI"
+      ]
+    },
+    "backend": {
+      "services": [
+        "Regulatory Scraper Service",
+        "Policy Analysis Service",
+        "Risk Engine"
+      ],
+      "databases": [
+        "Convex (Real-time DB)",
+        "Pinecone (Vector DB)"
+      ],
+      "ai_models": [
+        "Claude 3.5 Sonnet",
+        "OpenAI Embedding"
+      ],
+      "infra": [
+        "Vercel",
+        "AWS Lambda"
+      ]
+    }
+  },
+  "data_pipeline": {
+    "inputs": [
+      "PDF regulatory documents from BNM website",
+      "Scraped HTML content from e-Federal Gazette",
+      "Bank internal policies (PDF/Docx)"
+    ],
+    "processing": [
+      "OCR via Tesseract/Textract",
+      "Semantic Chunking",
+      "LLM summarization (Claude)",
+      "JSON structuring of obligations",
+      "Embedding generation"
+    ],
+    "outputs": [
+      "Structured compliance rules (JSON)",
+      "Risk scores (0-100)",
+      "Policy gap report (PDF)"
+    ]
+  },
+  "risk_management": {
+    "llm_risks": [
+      "hallucination",
+      "incorrect interpretation of law",
+      "data leakage of PII"
+    ],
+    "mitigations": [
+      "citation-based retrieval (RAG)",
+      "confidence scoring thresholds",
+      "human review checkpoints for high-risk flags",
+      "PII redaction pre-processing"
+    ]
+  },
+  "regulatory_scope": [
+    {
+      "jurisdiction": "Malaysia",
+      "documents": [
+        {
+          "name": "AMLA 2001",
+          "sections_used": [
+            "Section 13",
+            "Section 14",
+            "Section 16"
+          ],
+          "last_updated": "2024-01-01",
+          "url": "https://www.bnm.gov.my/amla"
+        },
+        {
+          "name": "BNM AML/CFT Policy Document",
+          "sections_used": [
+            "Part B: CDD",
+            "Part D: Reporting"
+          ],
+          "last_updated": "2024-02-15",
+          "url": "https://www.bnm.gov.my/policy"
+        }
+      ]
+    }
+  ]
+}

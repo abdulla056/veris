@@ -1,0 +1,141 @@
+{
+  "audit_id": "AUD-1765019181031",
+  "audit_date": "2025-12-06T11:06:21.031Z",
+  "product_name": "Veris Compliance Engine",
+  "regulation_source": "Anti-Money Laundering, Anti-Terrorism Financing and Proceeds of Unlawful Activities Act 2001",
+  "gaps_found": [
+    {
+      "gap_id": "GAP-1765019204751-41v4uxlr8",
+      "gap_type": "missing_feature",
+      "severity": "critical",
+      "regulation": {
+        "name": "Suspicious Transaction Reporting",
+        "section": "Section 14(1)",
+        "requirement": "Reporting institutions must promptly report any transaction that gives reason to suspect it involves proceeds of an unlawful activity.",
+        "description": "Reporting institutions must promptly report any transaction that gives reason to suspect it involves proceeds of an unlawful activity."
+      },
+      "current_state": "The Veris Compliance Engine provides real-time risk scoring based on CDD data and sanctions lists, and the Standard CDD Policy includes customer screening and risk rating procedures. However, neither the product specification nor the internal policy contains any explicit mechanism, workflow, or procedure for detecting, flagging, and reporting suspicious transactions to the Financial Intelligence and Enforcement Bureau (FIEB) as mandated by Section 14(1) of AMLA 2001.",
+      "gap_description": "Section 14(1) of the Anti-Money Laundering, Anti-Terrorism Financing and Proceeds of Unlawful Activities Act 2001 requires reporting institutions to 'promptly report any transaction that gives reason to suspect it involves proceeds of an unlawful activity.' The current product specification focuses on KYC/CDD compliance, sanctions screening, and risk scoring but does not include: (1) transaction monitoring and anomaly detection capabilities; (2) suspicious transaction identification logic or thresholds; (3) a Suspicious Transaction Report (STR) generation and submission workflow; (4) integration with FIEB reporting channels; (5) defined timelines for 'prompt' reporting; (6) audit trails for STR decisions; (7) procedures for handling transaction-level behavioral indicators (structuring, round-tripping, unusual patterns). The internal policy similarly addresses customer-level due diligence but contains no transaction-level monitoring procedures or STR protocols.",
+      "affected_areas": [
+        "Transaction Monitoring",
+        "Suspicious Activity Detection",
+        "Regulatory Reporting",
+        "FIEB Compliance",
+        "AML/CFT Controls",
+        "Operational Procedures",
+        "Audit and Record Keeping"
+      ],
+      "risk_assessment": {
+        "regulatory_risk": "Non-compliance with Section 14(1) AMLA 2001 constitutes a direct breach of mandatory reporting obligations. BNM and MOHA have explicit expectations for STR submission within prescribed timeframes. Failure to report suspicious transactions exposes the institution to enforcement action, regulatory sanctions, and potential criminal liability for senior management under Section 131 AMLA 2001 (failure to report). The institution may also be designated as non-compliant in AML/CFT mutual evaluation assessments.",
+        "financial_impact": "Potential civil penalties up to RM5 million and/or imprisonment for up to 5 years under Section 131 AMLA 2001. Additional financial penalties from BNM under Banking Regulation Act 1989 for systemic AML/CFT control failures. Reputational damage, loss of correspondent banking relationships, and potential de-risking by international partners. Costs associated with remediation, system implementation, and regulatory remediation programs.",
+        "operational_impact": "Undetected money laundering and terrorism financing transactions flowing through the institution unimpeded, increasing institutional exposure to criminal proceeds and terrorist financing risks. Inability to fulfill core AML/CFT mandate, creating operational and compliance governance failures. Potential need for emergency system implementation under regulatory directive, disrupting normal operations. Increased regulatory scrutiny, on-site examinations, and compliance monitoring requirements."
+      },
+      "recommendation": "Immediately develop and implement a comprehensive Transaction Monitoring and Suspicious Transaction Reporting (STR) module within the Veris Compliance Engine and establish corresponding internal policies and procedures. This must include: (1) real-time transaction screening against behavioral indicators and risk thresholds; (2) automated STR generation with mandatory human review checkpoints; (3) integration with FIEB's online STR submission portal; (4) defined escalation workflows and reporting timelines compliant with 'prompt' reporting requirements; (5) comprehensive audit trails and decision documentation; (6) staff training on STR procedures and suspicious activity indicators.",
+      "remediation_steps": [
+        "Conduct gap analysis of current transaction monitoring capabilities against BNM Guidelines on AML/CFT Risk Management and FIEB STR submission requirements to define detailed functional specifications",
+        "Develop transaction-level monitoring rules within Veris Compliance Engine including: structuring detection, round-tripping patterns, unusual transaction sizes/frequencies, high-risk jurisdiction transactions, beneficial ownership mismatches, and layering indicators",
+        "Implement automated STR workflow: transaction flagging → compliance officer review → STR form generation (BNM standard format) → FIEB submission portal integration → confirmation tracking and record retention",
+        "Define 'prompt reporting' timelines in policy (recommend maximum 3 business days from detection to FIEB submission per BNM expectations) with escalation procedures for urgent cases",
+        "Establish human review checkpoints with documented decision rationale for all STR submissions, including false positive management and threshold tuning procedures",
+        "Integrate transaction monitoring with existing CDD/risk scoring to enable holistic customer-transaction risk correlation and context-aware suspicious activity detection",
+        "Implement comprehensive audit trail functionality capturing: transaction details, risk scores, detection rules triggered, reviewer decisions, STR submission timestamps, and FIEB acknowledgment records",
+        "Develop internal policy document 'Suspicious Transaction Reporting Procedure' detailing roles, responsibilities, timelines, escalation, confidentiality, and record-keeping requirements (minimum 6 years retention)",
+        "Conduct staff training program for compliance officers, transaction reviewers, and management on STR identification, reporting procedures, and regulatory obligations under Section 14(1) AMLA 2001",
+        "Establish quality assurance program with periodic testing of STR detection effectiveness, false positive rates, and reporting timeliness to ensure ongoing compliance"
+      ],
+      "citation": "Anti-Money Laundering, Anti-Terrorism Financing and Proceeds of Unlawful Activities Act 2001, Section 14(1)",
+      "confidence_score": 0.98
+    },
+    {
+      "gap_id": "GAP-1765019226623-ljgy3i0aw",
+      "gap_type": "incomplete_coverage",
+      "severity": "high",
+      "regulation": {
+        "name": "Customer Due Diligence (CDD)",
+        "section": "Section 16(1)",
+        "requirement": "Institutions must conduct CDD when establishing business relations or when a transaction exceeds the prescribed limit.",
+        "description": "Institutions must conduct CDD when establishing business relations or when a transaction exceeds the prescribed limit."
+      },
+      "current_state": "The internal CDD Policy addresses core KYC verification and sanctions screening for individual customer onboarding. The Veris Compliance Engine provides automated regulatory scanning, policy gap analysis, and risk scoring capabilities. However, the policy focuses primarily on initial account establishment procedures and does not explicitly address the transaction threshold monitoring requirement stipulated in Section 16(1) of AMLA 2001.",
+      "gap_description": "Section 16(1) of AMLA 2001 mandates CDD when: (a) establishing business relations, OR (b) when a transaction exceeds the prescribed limit. The current internal policy comprehensively covers scenario (a) through the 'Individual Customer Onboarding' procedure, but contains no documented procedures, controls, or monitoring mechanisms for scenario (b) - transaction threshold-based CDD triggers. The policy lacks: (1) definition of the prescribed transaction limit, (2) real-time transaction monitoring logic, (3) procedures for enhanced CDD upon threshold breach, (4) escalation workflows for threshold-triggered CDD, and (5) record-keeping requirements specific to threshold-based CDD events. The Veris Engine's 'Real-time Risk Scoring' feature operates on customer profiles and sanctions data but does not explicitly incorporate transaction amount monitoring or threshold-based CDD triggering logic.",
+      "affected_areas": [
+        "Transaction Monitoring and Threshold Detection",
+        "Enhanced Due Diligence (EDD) Procedures",
+        "Compliance Control Procedures",
+        "Record Keeping and Documentation",
+        "System Configuration and Rules Engine",
+        "Regulatory Obligation Mapping"
+      ],
+      "risk_assessment": {
+        "regulatory_risk": "Non-compliance with Section 16(1) AMLA 2001 regarding transaction threshold-based CDD obligations exposes the institution to regulatory findings during BNM inspections. BNM's AML/CFT examination procedures specifically test whether institutions have implemented transaction monitoring systems that trigger CDD procedures at prescribed limits. Failure to demonstrate this control constitutes a material deficiency in the AML/CFT framework and may result in regulatory enforcement action, including Compliance Orders or Prohibition Notices under Section 120 AMLA 2001.",
+        "financial_impact": "Potential financial penalties include: (1) Civil penalties up to RM5 million for institutional non-compliance under Section 121 AMLA 2001, (2) Director/Officer personal liability up to RM1 million and/or 5 years imprisonment under Section 122 AMLA 2001, (3) Reputational damage and loss of banking license if systemic AML/CFT failures are identified, (4) Increased regulatory capital requirements or enhanced supervision costs imposed by BNM, (5) Potential liability for proceeds of unlawful activities that flow through unmonitored transactions.",
+        "operational_impact": "Operational consequences include: (1) Manual workarounds and ad-hoc CDD procedures creating inconsistent compliance posture, (2) Increased operational risk from undetected high-value transactions that may facilitate money laundering or terrorism financing, (3) Regulatory examination findings requiring urgent remediation and resource allocation, (4) Potential transaction delays if threshold-based CDD is implemented reactively without system integration, (5) Audit and compliance team burden from manual transaction review processes, (6) Data integrity issues if threshold monitoring is not systematized and auditable."
+      },
+      "recommendation": "Immediately conduct a regulatory requirements mapping exercise to identify the prescribed transaction limit(s) applicable to the institution under BNM guidelines (typically referenced in BNM Policy Document on AML/CFT or relevant circulars). Enhance the internal CDD Policy to explicitly incorporate transaction threshold-based CDD procedures as a distinct trigger scenario separate from relationship establishment. Extend the Veris Compliance Engine's rules engine to include transaction amount monitoring logic that automatically flags transactions exceeding prescribed limits and initiates CDD workflows. Implement a documented escalation procedure that specifies: (a) threshold values by transaction type/customer segment, (b) CDD data elements required upon threshold breach, (c) approval authorities, (d) timeline for CDD completion, and (e) record-keeping requirements. Conduct a gap assessment of the current transaction monitoring system to determine if it can be configured to support threshold-based CDD triggering or if system enhancements are required.",
+      "remediation_steps": [
+        "Step 1: Conduct regulatory research to identify the prescribed transaction limit(s) under BNM guidelines, AMLA 2001 regulations, and any institution-specific risk-based thresholds. Document findings in a regulatory requirements register.",
+        "Step 2: Amend the Standard CDD Policy to add a new section titled 'Transaction Threshold-Based CDD' that explicitly addresses Section 16(1)(b) AMLA 2001, including: definition of prescribed limits, trigger conditions, required CDD procedures, enhanced due diligence criteria for high-value transactions, and approval workflows.",
+        "Step 3: Configure the Veris Compliance Engine's rules engine to parse and embed transaction threshold requirements from BNM regulatory documents and internal policy. Ensure the 'Intelligent Policy Gap Analysis' feature specifically flags any gaps in transaction monitoring procedures against Section 16(1) requirements.",
+        "Step 4: Integrate transaction monitoring logic into the Veris Engine's data pipeline to enable real-time transaction amount screening. Modify the 'Real-time Risk Scoring' feature to incorporate transaction value as a risk factor and trigger CDD flags when thresholds are breached.",
+        "Step 5: Design and document an automated workflow that: (a) captures transaction details, (b) compares against prescribed limits, (c) initiates CDD procedures upon threshold breach, (d) routes to appropriate approval authority, (e) records CDD completion and approval, and (f) maintains audit trail.",
+        "Step 6: Extend the Record Keeping requirements in the policy to explicitly include: transaction threshold monitoring records, threshold-triggered CDD forms, approval documentation, and audit logs of all threshold-based CDD events, with retention period of 6 years minimum.",
+        "Step 7: Conduct user acceptance testing (UAT) of the enhanced Veris Engine to validate that transaction threshold monitoring functions correctly, CDD workflows are triggered appropriately, and all records are properly maintained and retrievable.",
+        "Step 8: Perform a retrospective compliance review of the past 12-24 months of transactions to identify any historical threshold breaches that may not have received adequate CDD procedures. Remediate any identified gaps and document corrective actions.",
+        "Step 9: Conduct staff training on the updated CDD Policy and transaction threshold procedures, ensuring all relevant personnel (front-line staff, compliance, operations) understand their roles in threshold-based CDD.",
+        "Step 10: Schedule a follow-up audit within 3 months to verify that transaction threshold-based CDD procedures are functioning as designed and producing compliant outcomes."
+      ],
+      "citation": "Anti-Money Laundering, Anti-Terrorism Financing and Proceeds of Unlawful Activities Act 2001, Section 16(1)",
+      "confidence_score": 0.92
+    },
+    {
+      "gap_id": "GAP-1765019246034-841p617e6",
+      "gap_type": "incomplete_coverage",
+      "severity": "high",
+      "regulation": {
+        "name": "Record Keeping",
+        "section": "Section 17",
+        "requirement": "Maintain all records of transactions and CDD information for at least 6 years.",
+        "description": "Maintain all records of transactions and CDD information for at least 6 years."
+      },
+      "current_state": "The internal policy specifies record keeping duration of 6 years and identifies three record types to retain: Copy of ID, Screening Results, and Risk Assessment Form. The Veris Compliance Engine product specification includes data pipeline capabilities for processing and structuring compliance information, but does not explicitly address record retention, archival, retrieval, or verification mechanisms required for regulatory compliance.",
+      "gap_description": "While the CDD Policy establishes a 6-year retention requirement, there are critical gaps in implementation and system support: (1) The product specification contains no mention of record storage infrastructure, retention management, or archival systems; (2) No specification of what constitutes 'all records of transactions' beyond the three listed CDD record types - missing transaction records, correspondence, amendments, and audit trails; (3) No defined procedures for secure storage, access controls, or retrieval mechanisms; (4) No mention of data integrity verification, backup/disaster recovery, or immutability controls; (5) No audit trail or chain-of-custody documentation for records access; (6) The product's data pipeline focuses on processing regulatory documents and policies but lacks explicit functionality for managing customer transaction and CDD record lifecycle; (7) No specification of how records will be maintained in retrievable format for regulatory inspection or investigation purposes.",
+      "affected_areas": [
+        "Record Retention Infrastructure",
+        "Transaction Record Documentation",
+        "Data Storage and Archival Systems",
+        "Access Controls and Audit Trails",
+        "Data Integrity and Backup Procedures",
+        "Regulatory Inspection Readiness",
+        "System Compliance Verification"
+      ],
+      "risk_assessment": {
+        "regulatory_risk": "Non-compliance with Section 17 of AMLA 2001 constitutes a direct violation of statutory record-keeping obligations. BNM enforcement actions specifically target inadequate record retention. Failure to produce records upon regulatory request or during investigations can result in presumption of non-compliance and heightened scrutiny. The institution may face enforcement notices, compliance orders, or license restrictions.",
+        "financial_impact": "Potential penalties under AMLA 2001 Section 17 violations range from RM100,000 to RM1,000,000+ depending on severity and whether records are entirely absent or merely incomplete. Additional costs include: (1) Remediation costs to reconstruct missing records; (2) Regulatory fines and administrative penalties; (3) Reputational damage affecting customer confidence and business relationships; (4) Potential civil liability if records are needed for AML/CFT investigations or legal proceedings; (5) Operational costs of implementing compliant record management systems retroactively.",
+        "operational_impact": "Inability to retrieve transaction and CDD records within required timeframes impairs the institution's ability to: (1) Respond to BNM/FIU regulatory inquiries and investigations; (2) Support internal compliance monitoring and suspicious activity reporting; (3) Conduct transaction tracing for SAR investigations; (4) Defend against regulatory enforcement actions; (5) Demonstrate compliance during audits; (6) Meet customer requests for account history; (7) Support legal proceedings or law enforcement cooperation. The absence of audit trails creates operational blind spots regarding who accessed records, when, and for what purpose, undermining accountability and control frameworks."
+      },
+      "recommendation": "Immediately enhance the Veris Compliance Engine product specification to include explicit record management capabilities, and update the CDD Policy to comprehensively define record-keeping procedures. Conduct a gap assessment of current record storage infrastructure against Section 17 requirements. Implement a dedicated Records Management Module within the compliance platform that: (1) captures and stores all transaction records and CDD documentation with timestamps; (2) enforces 6-year retention with automated lifecycle management; (3) provides secure retrieval and audit trail functionality; (4) includes data integrity verification and backup procedures; (5) generates compliance reports demonstrating record retention status.",
+      "remediation_steps": [
+        "Expand product specification to explicitly include 'Records Management Module' with defined capabilities for transaction record capture, storage, retrieval, and retention lifecycle management",
+        "Update CDD Policy Section 4 (Record Keeping) to comprehensively define: (a) all record types required beyond the current three (transaction records, correspondence, amendments, audit logs); (b) storage location, format, and security requirements; (c) access control procedures and audit trail requirements; (d) backup and disaster recovery procedures; (e) retrieval procedures for regulatory requests",
+        "Conduct technical audit of current record storage infrastructure to verify: (a) 6-year retention capacity and automated enforcement; (b) data integrity controls (checksums, immutability); (c) access logging and audit trail capabilities; (d) backup frequency and recovery testing; (e) compliance with BNM Guidelines on Data Protection",
+        "Implement automated record retention management with: (a) timestamp capture at record creation; (b) automated deletion/archival after 6-year period; (c) exception handling for records subject to legal holds or ongoing investigations; (d) monthly compliance reporting on retention status",
+        "Establish retrieval procedures and testing: (a) define SLA for responding to regulatory record requests; (b) conduct quarterly retrieval testing to verify records are accessible and complete; (c) document retrieval procedures in compliance manual",
+        "Integrate record management audit trail into Veris platform's risk scoring and compliance monitoring to flag retention gaps or access anomalies",
+        "Conduct staff training on record-keeping obligations and procedures, with documented completion",
+        "Schedule quarterly compliance reviews to verify ongoing adherence to 6-year retention requirement and identify any emerging gaps"
+      ],
+      "citation": "Anti-Money Laundering, Anti-Terrorism Financing and Proceeds of Unlawful Activities Act 2001, Section 17",
+      "confidence_score": 0.92
+    }
+  ],
+  "compliance_score": 17,
+  "summary": {
+    "total_gaps": 3,
+    "critical_gaps": 1,
+    "high_gaps": 2,
+    "medium_gaps": 0,
+    "low_gaps": 0
+  },
+  "recommendations_summary": "# Compliance Gaps – Executive Summary\n\nThe organization faces **three critical compliance exposures** under the Anti-Money Laundering Act 2001. Most critically, the system lacks **transaction monitoring and Suspicious Transaction Reporting (STR) capabilities** entirely—a mandatory requirement to detect and promptly report suspected unlawful activity proceeds, creating direct regulatory violation risk. Secondly, **transaction threshold-based CDD triggers** are not operationalized; while customer onboarding CDD is covered, the system cannot detect or respond when individual transactions exceed prescribed limits, leaving a significant supervisory gap. Finally, **record retention infrastructure is not implemented**—the 6-year retention policy exists on paper but lacks system controls, storage mechanisms, access governance, and audit trails needed to retrieve records for regulatory inspection.\n\n**Immediate Actions Required:** (1) Engineer transaction monitoring and STR workflow capabilities with FIEB integration and defined reporting timelines; (2) Implement real-time transaction threshold monitoring with automated CDD escalation logic; (3) Deploy secure record management infrastructure with access controls, audit trails, and retrievability verification. These gaps require both product development and policy operationalization to achieve regulatory compliance.",
+  "next_review_date": "2026-12-06T11:07:30.165Z"
+}
