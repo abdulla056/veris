@@ -48,7 +48,7 @@ interface ComplianceScoreCardProps {
 }
 
 export function ComplianceScoreCard({ score }: ComplianceScoreCardProps) {
-  const getScoreVariant = (score: number) => {
+  const getScoreVariant = (score: number): { color: "green" | "yellow" | "orange" | "red"; text: string } => {
     if (score >= 90) return { color: "green", text: "Excellent" };
     if (score >= 70) return { color: "yellow", text: "Good" };
     if (score >= 50) return { color: "orange", text: "Fair" };
@@ -56,14 +56,14 @@ export function ComplianceScoreCard({ score }: ComplianceScoreCardProps) {
   };
 
   const variant = getScoreVariant(score);
-  const colorClasses = {
+  const colorClasses: Record<"green" | "yellow" | "orange" | "red", string> = {
     green: "text-green-600 dark:text-green-400 bg-green-500/10",
     yellow: "text-yellow-600 dark:text-yellow-400 bg-yellow-500/10",
     orange: "text-orange-600 dark:text-orange-400 bg-orange-500/10",
     red: "text-destructive bg-destructive/10",
   };
 
-  const textColorClasses = {
+  const textColorClasses: Record<"green" | "yellow" | "orange" | "red", string> = {
     green: "text-green-600 dark:text-green-400",
     yellow: "text-yellow-600 dark:text-yellow-400",
     orange: "text-orange-600 dark:text-orange-400",
