@@ -26,13 +26,14 @@ export default function RootLayout({
         <body
           className={`${inter.variable} font-sans antialiased`}
         >
-          <ConvexClientProvider>{children}</ConvexClientProvider>
-          <ThemeProvider
-            defaultTheme="light"
-            storageKey="veris-theme"
-        >
-          {children}
-          </ThemeProvider>
+          <ConvexClientProvider>
+            <ThemeProvider
+              defaultTheme="light"
+              storageKey="veris-theme"
+            >
+              {children}
+            </ThemeProvider>
+          </ConvexClientProvider>
         </body>
       </html>
     </ClerkProvider>
