@@ -1,4 +1,4 @@
-# Compliance Co-Pilot (MVP)
+# MyComply.ai Compliance Co-Pilot (MVP)
 
 A modern, professional compliance AI dashboard for the Malaysian banking sector, designed to help compliance officers check product documents against Anti-Money Laundering (AML) regulations from Bank Negara Malaysia (BNM).
 
