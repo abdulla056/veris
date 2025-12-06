@@ -23,13 +23,17 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.variable} font-sans antialiased`}>
-          <ThemeProvider
-            defaultTheme="light"
-            storageKey="veris-theme"
+        <body
+          className={`${inter.variable} font-sans antialiased`}
         >
-          <ConvexClientProvider>{children}</ConvexClientProvider>
-          </ThemeProvider>
+          <ConvexClientProvider>
+            <ThemeProvider
+              defaultTheme="light"
+              storageKey="veris-theme"
+            >
+              {children}
+            </ThemeProvider>
+          </ConvexClientProvider>
         </body>
       </html>
     </ClerkProvider>
