@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
 import { DashboardHeader } from "@/components/dashboard/header";
-import { DocumentUpload } from "@/components/dashboard/document-upload";
 import { StatsGrid } from "@/components/dashboard/stat-cards";
 import { RecentAuditsTable } from "@/components/dashboard/recent-audits-table";
 import { RiskCardsSection } from "@/components/dashboard/risk-card";
@@ -111,9 +110,6 @@ export default function Home() {
             {/* Results Display */}
             {!isLoading && analysisResult && (
               <>
-                {/* Document Upload Zone */}
-                <DocumentUpload />
-
                 {/* Stats Grid */}
                 <StatsGrid result={analysisResult} />
 
