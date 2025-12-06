@@ -1,0 +1,11 @@
+{
+  "startUrls": [
+    { "url": "https://www.bnm.gov.my/amlcft" }
+  ],
+  "maxPdfsToDownload": 10,
+  "extractFullText": true,
+  "followLinks": true,
+  "maxCrawlDepth": 2,
+  "pdfKeywords": []
+}
+

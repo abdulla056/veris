@@ -1,0 +1,50 @@
+{
+  "name": "bnm-amlcft-scraper",
+  "version": "1.0.0",
+  "description": "Apify actor for scraping Bank Negara Malaysia AML/CFT compliance documents",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "npm run build && node dist/main.js",
+    "build": "npx tsc",
+    "dev": "npx ts-node src/main.ts",
+    "lint": "npx eslint src --ext .ts",
+    "test": "jest"
+  },
+  "keywords": [
+    "apify",
+    "actor",
+    "bnm",
+    "bank-negara-malaysia",
+    "aml",
+    "cft",
+    "compliance",
+    "fintech",
+    "web-scraping",
+    "pdf-extraction"
+  ],
+  "author": "Veris",
+  "license": "MIT",
+  "dependencies": {
+    "apify": "^3.2.6",
+    "crawlee": "^3.11.5",
+    "playwright": "^1.49.1",
+    "cheerio": "^1.0.0",
+    "axios": "^1.7.9",
+    "pdf-parse": "^1.1.1",
+    "dotenv": "^16.4.5",
+    "typescript": "^5.7.2",
+    "@types/node": "^22.10.1",
+    "@types/pdf-parse": "^1.1.4",
+    "@anthropic-ai/sdk": "^0.32.1"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.17.0",
+    "eslint": "^9.16.0"
+  }
+}

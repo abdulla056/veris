@@ -1,0 +1,12 @@
+{
+  "actorSpecification": 1,
+  "name": "bnm-amlcft-scraper",
+  "title": "Bank Negara Malaysia AML/CFT Compliance Scraper",
+  "description": "Scrapes Bank Negara Malaysia's AML/CFT regulatory documents, downloads PDFs, and extracts compliance policies for fintech companies.",
+  "version": "1.0",
+  "meta": {
+    "templateId": "ts-crawlee-playwright-chrome"
+  },
+  "input": "./INPUT_SCHEMA.json",
+  "dockerfile": "../Dockerfile"
+}
