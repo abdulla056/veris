@@ -1,0 +1,141 @@
+{
+  "act_name": "Anti-Money Laundering, Anti-Terrorism Financing and Proceeds of Unlawful Activities Act 2001",
+  "jurisdiction": "Malaysia",
+  "version": "2024 Revised Edition",
+  "last_updated": "2024-12-01",
+  "definitions": [
+    {
+      "term": "Money Laundering",
+      "meaning": "The act of engaging, directly or indirectly, in a transaction that involves proceeds of an unlawful activity.",
+      "source_section": "Section 3"
+    },
+    {
+      "term": "Reporting Institution",
+      "meaning": "Any person, including branches and subsidiaries, listed in the First Schedule required to comply with reporting obligations.",
+      "source_section": "Section 3"
+    },
+    {
+      "term": "Customer Due Diligence",
+      "meaning": "The process of identifying and verifying the customer's identity and assessing the risks associated with the business relationship.",
+      "source_section": "Section 16"
+    }
+  ],
+  "obligations": [
+    {
+      "name": "Suspicious Transaction Reporting",
+      "description": "Reporting institutions must promptly report any transaction that gives reason to suspect it involves proceeds of an unlawful activity.",
+      "applies_to": [
+        "Banks",
+        "Insurance Companies",
+        "E-money Issuers"
+      ],
+      "source_section": "Section 14(1)",
+      "risk_level": "High"
+    },
+    {
+      "name": "Customer Due Diligence (CDD)",
+      "description": "Institutions must conduct CDD when establishing business relations or when a transaction exceeds the prescribed limit.",
+      "applies_to": [
+        "All Reporting Institutions"
+      ],
+      "source_section": "Section 16(1)",
+      "risk_level": "High"
+    },
+    {
+      "name": "Record Keeping",
+      "description": "Maintain all records of transactions and CDD information for at least 6 years.",
+      "applies_to": [
+        "All Reporting Institutions"
+      ],
+      "source_section": "Section 17",
+      "risk_level": "Medium"
+    }
+  ],
+  "procedures": [
+    {
+      "name": "Submission of Suspicious Transaction Report (STR)",
+      "steps": [
+        "Identify suspicious activity",
+        "Conduct internal investigation",
+        "Compliance Officer review",
+        "Submit STR to BNM via FINS system"
+      ],
+      "conditions": "Must be submitted within 24 hours of confirmation of suspicion.",
+      "source_section": "Section 14 Guidelines"
+    }
+  ],
+  "offences": [
+    {
+      "offence": "Money Laundering",
+      "description": "Engaging in, abetting, or conspiring to commit money laundering.",
+      "source_section": "Section 4(1)"
+    },
+    {
+      "offence": "Tipping Off",
+      "description": "Disclosing to any person that a report has been made or that an investigation is being carried out.",
+      "source_section": "Section 35"
+    }
+  ],
+  "penalties": [
+    {
+      "offence": "Money Laundering",
+      "fine_amount": "Up to RM 5 million",
+      "imprisonment_term": "Up to 15 years",
+      "corporate_penalty": "Fine up to RM 5 million or 5 times the value of proceeds, whichever is higher",
+      "source_section": "Section 4(1)"
+    },
+    {
+      "offence": "Failure to Report Suspicious Transaction",
+      "fine_amount": "Up to RM 1 million",
+      "imprisonment_term": "Up to 3 years",
+      "corporate_penalty": "Up to RM 1 million",
+      "source_section": "Section 14(b)"
+    }
+  ],
+  "recordkeeping_requirements": {
+    "retention_period": "6 years",
+    "conditions": "From the date the transaction is completed or business relationship is terminated.",
+    "source_section": "Section 17"
+  },
+  "applicability": [
+    {
+      "entity_type": "Financial Institutions",
+      "obligations": [
+        "CDD",
+        "STR",
+        "Record Keeping",
+        "Compliance Officer Appointment"
+      ],
+      "exemptions": [
+        "Low-risk products as defined in guidelines"
+      ]
+    },
+    {
+      "entity_type": "Designated Non-Financial Businesses and Professions (DNFBPs)",
+      "obligations": [
+        "CDD",
+        "STR",
+        "Record Keeping"
+      ],
+      "exemptions": []
+    }
+  ],
+  "exceptions": [
+    {
+      "description": "Simplified CDD allowed for public listed companies and government entities.",
+      "source_section": "Section 16 Guidelines"
+    }
+  ],
+  "cross_references": [
+    {
+      "reference_type": "Regulation",
+      "related_document": "BNM AML/CFT Policy Document 2024",
+      "description": "Detailed guidelines on implementing AMLA requirements."
+    },
+    {
+      "reference_type": "International Standard",
+      "related_document": "FATF Recommendations",
+      "description": "Global standards which AMLA 2001 aims to comply with."
+    }
+  ]
+}

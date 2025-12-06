@@ -1,0 +1,126 @@
+{
+  "policy_id": "POL-MY-AML-2024-001",
+  "policy_name": "Standard Customer Due Diligence (CDD) Policy",
+  "policy_type": "aml",
+  "jurisdiction": "Malaysia",
+  "source_document": {
+    "title": "Anti-Money Laundering, Anti-Terrorism Financing and Proceeds of Unlawful Activities Act 2001",
+    "url": "https://www.bnm.gov.my/legislation",
+    "section": "Section 16",
+    "excerpt": "A reporting institution shall conduct customer due diligence."
+  },
+  "description": "Policy outlining the standard procedures for identifying and verifying customers for individual accounts.",
+  "requirements": [
+    {
+      "requirement_id": "REQ-CDD-01",
+      "text": "Obtain full name, NRIC/Passport number, and residential address.",
+      "risk_level": "high",
+      "category": "KYC"
+    },
+    {
+      "requirement_id": "REQ-CDD-02",
+      "text": "Verify identity documents against original or certified true copies.",
+      "risk_level": "high",
+      "category": "CDD"
+    },
+    {
+      "requirement_id": "REQ-SCREEN-01",
+      "text": "Screen customer against UN Security Council Resolutions and MOHA sanction lists.",
+      "risk_level": "high",
+      "category": "screening"
+    }
+  ],
+  "obligations": [
+    {
+      "obligation_id": "OBL-VERIFY-ID",
+      "summary": "Mandatory ID Verification",
+      "detailed_text": "The institution must ensure that the customer's identity is verified using reliable, independent source documents.",
+      "violations_if_unmet": [
+        "Failure to conduct CDD",
+        "Breach of AMLA Section 16"
+      ],
+      "penalties": {
+        "fine": "RM 1,000,000",
+        "imprisonment": "1 year",
+        "regulator": "BNM"
+      }
+    }
+  ],
+  "internal_controls": [
+    {
+      "control_id": "CTRL-KYC-CHECK",
+      "name": "New Account KYC Check",
+      "description": "Automated check of ID format and validity upon data entry.",
+      "related_requirements": [
+        "REQ-CDD-01"
+      ],
+      "frequency": "per-transaction",
+      "responsible_role": "Compliance Officer"
+    },
+    {
+      "control_id": "CTRL-SANCTION-DAILY",
+      "name": "Daily Sanctions Screening",
+      "description": "Batch screening of entire customer base against updated sanction lists.",
+      "related_requirements": [
+        "REQ-SCREEN-01"
+      ],
+      "frequency": "daily",
+      "responsible_role": "MLRO"
+    }
+  ],
+  "procedures": [
+    {
+      "procedure_id": "PROC-ONBOARD-INDIVIDUAL",
+      "name": "Individual Customer Onboarding",
+      "steps": [
+        "Collect NRIC/Passport",
+        "Perform facial recognition liveness check (e-KYC)",
+        "Input details into system",
+        "Run sanction screening",
+        "Assign initial risk rating",
+        "Approve or Refer to Compliance"
+      ],
+      "inputs": [
+        "ID Image",
+        "Selfie Video"
+      ],
+      "outputs": [
+        "Approved/Rejected Status",
+        "Risk Score"
+      ]
+    }
+  ],
+  "record_keeping": {
+    "duration_years": "6",
+    "records_required": [
+      "Copy of ID",
+      "Screening Results",
+      "Risk Assessment Form"
+    ],
+    "storage_requirements": "Digital encrypted storage with audit trail."
+  },
+  "exceptions": [
+    {
+      "exception_id": "EXC-LOW-RISK",
+      "allowed_under": "BNM e-Money Guidelines",
+      "conditions": "Wallet limit below RM 200 and total monthly transaction value below RM 1,000."
+    }
+  ],
+  "risk_indicators": [
+    {
+      "indicator_id": "IND-PEPS",
+      "name": "Politically Exposed Person (PEP) Match",
+      "description": "Customer name matches a known PEP list.",
+      "threshold": "Exact Match or Fuzzy Match > 90%"
+    },
+    {
+      "indicator_id": "IND-HIGH-RISK-COUNTRY",
+      "name": "High Risk Country Connection",
+      "description": "Nationality or address linked to FATF high-risk jurisdictions.",
+      "threshold": "Presence in list"
+    }
+  ],
+  "last_updated": "2024-03-10",
+  "effective_date": "2024-04-01",
+  "review_frequency": "12 months"
+}
