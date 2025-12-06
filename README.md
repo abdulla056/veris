@@ -71,13 +71,46 @@ A modern, professional compliance AI dashboard for the Malaysian banking sector,
 - **Styling**: Tailwind CSS 4
 - **UI Components**: Shadcn UI
 - **Icons**: Lucide React
+- **Authentication**: Clerk
 - **TypeScript**: Full type safety
+
+## 🔐 Authentication
+
+This app uses **Clerk** for secure authentication. All routes are protected by default.
+
+### Quick Setup (Required):
+
+1. **Get Clerk API Keys** (free):
+   - Sign up at [https://clerk.com](https://clerk.com)
+   - Create a new application
+   - Copy your API keys from the dashboard
+
+2. **Configure Environment**:
+   ```bash
+   # Copy the example env file
+   cp .env.example .env.local
+   
+   # Edit .env.local and add your Clerk keys:
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
+   CLERK_SECRET_KEY=sk_test_your_secret_here
+   ```
+
+3. **Start the app**:
+   ```bash
+   npm run dev
+   ```
+
+📖 **Detailed setup instructions**: See [CLERK_SETUP.md](./CLERK_SETUP.md)
 
 ## Getting Started
 
 ```bash
 # Install dependencies
 npm install
+
+# Set up Clerk authentication (see above)
+cp .env.example .env.local
+# Then add your Clerk keys to .env.local
 
 # Run development server
 npm run dev
@@ -89,20 +122,26 @@ npm run build
 npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
+Open [http://localhost:3000](http://localhost:3000) - you'll be prompted to sign in!
 
 ## Component Structure
 
 ```
 app/
-├── page.tsx              # Main dashboard page
-├── layout.tsx            # Root layout with Inter font
-└── globals.css           # Global styles and theme
+├── page.tsx              # Main dashboard page (protected)
+├── layout.tsx            # Root layout with Clerk provider
+├── globals.css           # Global styles and theme
+├── sign-in/              # Clerk sign-in page
+│   └── [[...sign-in]]/
+└── sign-up/              # Clerk sign-up page
+    └── [[...sign-up]]/
+
+middleware.ts             # Route protection
 
 components/
 └── dashboard/
     ├── sidebar.tsx       # Navigation sidebar
-    ├── header.tsx        # Top header with user profile
+    ├── header.tsx        # Top header with Clerk user
     ├── quick-audit-card.tsx  # Upload zone
     ├── stat-cards.tsx    # Metric cards and compliance score
     ├── recent-audits-table.tsx  # Audit history table
@@ -127,6 +166,15 @@ The dashboard references actual Bank Negara Malaysia (BNM) regulatory frameworks
 - AML/CFT Policy Document
 - Section 1, Paragraph 14.1 (Customer Identification)
 
+## Authentication Features
+
+✅ **Secure sign-in/sign-up** with email verification  
+✅ **Protected routes** - Dashboard requires authentication  
+✅ **User profile** - Real user data displayed in header  
+✅ **Session management** - Secure JWT-based sessions  
+✅ **Sign out** - Via UserButton dropdown  
+✅ **Social logins** - Configurable in Clerk dashboard (Google, Microsoft, etc.)  
+
 ## Future Enhancements
 
 - PDF upload and parsing functionality
@@ -134,7 +182,7 @@ The dashboard references actual Bank Negara Malaysia (BNM) regulatory frameworks
 - Real-time compliance scoring
 - Integration with BNM regulatory database API
 - Automated report generation
-- Multi-user role management
+- Role-based access control (Admin, Compliance Officer, Auditor)
 
 ## License
 

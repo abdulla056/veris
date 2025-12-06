@@ -10,88 +10,45 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Clock } from "lucide-react";
+import { FileText, Clock, Trash2 } from "lucide-react";
+import { useDocumentStore } from "@/lib/store/documents";
+import { formatDistanceToNow } from "date-fns";
 
-interface AuditData {
-  id: string;
-  documentName: string;
-  date: string;
-  type: string;
-  status: "Scanning" | "Compliant" | "Action Required";
-  riskLevel: "High" | "Medium" | "Low";
-}
-
-const auditData: AuditData[] = [
-  {
-    id: "1",
-    documentName: "Global Transfer Feature v2.pdf",
-    date: "Dec 5, 2025",
-    type: "Feature Spec",
-    status: "Action Required",
-    riskLevel: "High",
-  },
-  {
-    id: "2",
-    documentName: "e-Wallet Signup Flow",
-    date: "Dec 4, 2025",
-    type: "Policy Document",
-    status: "Compliant",
-    riskLevel: "Low",
-  },
-  {
-    id: "3",
-    documentName: "KYC Enhancement Proposal.pdf",
-    date: "Dec 3, 2025",
-    type: "Feature Spec",
-    status: "Scanning",
-    riskLevel: "Medium",
-  },
-  {
-    id: "4",
-    documentName: "Account Opening Policy Update",
-    date: "Dec 2, 2025",
-    type: "Policy Document",
-    status: "Compliant",
-    riskLevel: "Low",
-  },
-];
-
-function getStatusBadge(status: AuditData["status"]) {
-  const variants: Record<
-    AuditData["status"],
-    { variant: "default" | "secondary" | "destructive"; className?: string }
-  > = {
-    Scanning: { variant: "secondary", className: "bg-blue-100 text-blue-800" },
-    Compliant: { variant: "secondary", className: "bg-green-100 text-green-800" },
-    "Action Required": { variant: "destructive" },
+function getStatusBadge(status: "processing" | "completed" | "failed") {
+  const variants = {
+    processing: { className: "bg-blue-100 text-blue-800", icon: Clock },
+    completed: { className: "bg-green-100 text-green-800", icon: null },
+    failed: { className: "bg-red-100 text-red-800", icon: null },
   };
 
+  const config = variants[status];
+  const Icon = config.icon;
+
   return (
-    <Badge variant={variants[status].variant} className={variants[status].className}>
-      {status === "Scanning" && <Clock className="mr-1 h-3 w-3" />}
-      {status}
+    <Badge variant="secondary" className={config.className}>
+      {Icon && <Icon className="mr-1 h-3 w-3" />}
+      {status === "processing" ? "Scanning" : status === "completed" ? "Compliant" : "Failed"}
     </Badge>
   );
 }
 
-function getRiskBadge(riskLevel: AuditData["riskLevel"]) {
-  const variants: Record<
-    AuditData["riskLevel"],
-    { className: string }
-  > = {
-    High: { className: "bg-red-100 text-red-800 border-red-200" },
-    Medium: { className: "bg-amber-100 text-amber-800 border-amber-200" },
-    Low: { className: "bg-gray-100 text-gray-800 border-gray-200" },
+function getRiskBadge(riskLevel: "high" | "medium" | "low") {
+  const variants = {
+    high: { className: "bg-red-100 text-red-800 border-red-200" },
+    medium: { className: "bg-amber-100 text-amber-800 border-amber-200" },
+    low: { className: "bg-gray-100 text-gray-800 border-gray-200" },
   };
 
   return (
     <Badge variant="outline" className={variants[riskLevel].className}>
-      {riskLevel}
+      {riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1)}
     </Badge>
   );
 }
 
 export function RecentAuditsTable() {
+  const { documents, removeDocument } = useDocumentStore();
+
   return (
     <Card>
       <CardHeader>
@@ -114,29 +71,51 @@ export function RecentAuditsTable() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[300px]">Document Name</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Type</TableHead>
+              <TableHead>Uploaded</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Risk Level</TableHead>
+              <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {auditData.map((audit) => (
-              <TableRow key={audit.id} className="cursor-pointer hover:bg-gray-50">
-                <TableCell className="font-medium">
-                  <div className="flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-gray-400" />
-                    {audit.documentName}
-                  </div>
-                </TableCell>
-                <TableCell className="text-gray-600">{audit.date}</TableCell>
-                <TableCell className="text-gray-600">{audit.type}</TableCell>
-                <TableCell>{getStatusBadge(audit.status)}</TableCell>
-                <TableCell className="text-right">
-                  {getRiskBadge(audit.riskLevel)}
+            {documents.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="h-24 text-center text-gray-500">
+                  No documents uploaded yet. Upload a document to start an audit.
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              documents.map((doc) => (
+                <TableRow key={doc.id} className="cursor-pointer hover:bg-gray-50">
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-gray-400" />
+                      {doc.name}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-gray-600">
+                    {formatDistanceToNow(new Date(doc.uploadedAt), { addSuffix: true })}
+                  </TableCell>
+                  <TableCell>{getStatusBadge(doc.status)}</TableCell>
+                  <TableCell className="text-right">
+                    {getRiskBadge(doc.riskLevel)}
+                  </TableCell>
+                  <TableCell>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (confirm(`Delete "${doc.name}"?`)) {
+                          removeDocument(doc.id);
+                        }
+                      }}
+                      className="text-gray-400 hover:text-red-600 transition-colors"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </CardContent>

@@ -1,6 +1,6 @@
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
 import { DashboardHeader } from "@/components/dashboard/header";
-import { QuickAuditCard } from "@/components/dashboard/quick-audit-card";
+import { DocumentUpload } from "@/components/dashboard/document-upload";
 import { StatsGrid } from "@/components/dashboard/stat-cards";
 import { RecentAuditsTable } from "@/components/dashboard/recent-audits-table";
 import { RiskCardsSection } from "@/components/dashboard/risk-card";
@@ -19,8 +19,8 @@ export default function Home() {
         {/* Main Content with Scroll */}
         <main className="flex-1 overflow-y-auto">
           <div className="space-y-6 p-6">
-            {/* Quick Audit Upload Zone */}
-            <QuickAuditCard />
+            {/* Document Upload Zone */}
+            <DocumentUpload />
 
             {/* Stats Grid */}
             <StatsGrid />
