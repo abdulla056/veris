@@ -6,7 +6,7 @@ import { DocumentUpload } from "@/components/dashboard/document-upload";
 
 export default function UploadPage() {
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-background">
       {/* Sidebar */}
       <DashboardSidebar />
 
@@ -20,8 +20,8 @@ export default function UploadPage() {
           <div className="space-y-6 p-6">
             {/* Page Title */}
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Document Upload</h1>
-              <p className="mt-1 text-sm text-gray-500">
+              <h1 className="text-2xl font-bold text-foreground">Document Upload</h1>
+              <p className="mt-1 text-sm text-muted-foreground">
                 Upload your product specifications and compliance policies for AI-powered gap analysis
               </p>
             </div>

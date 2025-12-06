@@ -16,32 +16,32 @@ interface RiskCardProps {
 
 const severityConfig = {
   critical: {
-    bg: "bg-red-50",
-    border: "border-red-200",
-    text: "text-red-900",
-    badge: "bg-red-100 text-red-800 border-red-200",
-    icon: "text-red-600",
+    bg: "bg-red-500/10 dark:bg-red-500/20",
+    border: "border-red-500/30 dark:border-red-500/40",
+    text: "text-red-900 dark:text-red-300",
+    badge: "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700",
+    icon: "text-red-600 dark:text-red-400",
   },
   high: {
-    bg: "bg-orange-50",
-    border: "border-orange-200",
-    text: "text-orange-900",
-    badge: "bg-orange-100 text-orange-800 border-orange-200",
-    icon: "text-orange-600",
+    bg: "bg-orange-500/10 dark:bg-orange-500/20",
+    border: "border-orange-500/30 dark:border-orange-500/40",
+    text: "text-orange-900 dark:text-orange-300",
+    badge: "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-700",
+    icon: "text-orange-600 dark:text-orange-400",
   },
   medium: {
-    bg: "bg-amber-50",
-    border: "border-amber-200",
-    text: "text-amber-900",
-    badge: "bg-amber-100 text-amber-800 border-amber-200",
-    icon: "text-amber-600",
+    bg: "bg-amber-500/10 dark:bg-amber-500/20",
+    border: "border-amber-500/30 dark:border-amber-500/40",
+    text: "text-amber-900 dark:text-amber-300",
+    badge: "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-700",
+    icon: "text-amber-600 dark:text-amber-400",
   },
   low: {
-    bg: "bg-gray-50",
-    border: "border-gray-200",
-    text: "text-gray-900",
-    badge: "bg-gray-100 text-gray-800 border-gray-200",
-    icon: "text-gray-600",
+    bg: "bg-muted",
+    border: "border-border",
+    text: "text-foreground",
+    badge: "bg-muted text-muted-foreground border-border",
+    icon: "text-muted-foreground",
   },
 };
 
@@ -74,7 +74,7 @@ export function RiskCard({
             
             <div className="space-y-2">
               <div>
-                <p className="text-sm font-medium text-gray-700 mb-1">
+                <p className="text-sm font-medium text-foreground mb-1">
                   Detected Gap:
                 </p>
                 <p className={`text-sm ${config.text}`}>
@@ -83,11 +83,11 @@ export function RiskCard({
               </div>
               
               {recommendation && (
-                <div className="mt-3 pt-3 border-t border-gray-200">
-                  <p className="text-sm font-medium text-gray-700 mb-1">
+                <div className="mt-3 pt-3 border-t border-border">
+                  <p className="text-sm font-medium text-foreground mb-1">
                     Recommendation:
                   </p>
-                  <p className="text-sm text-gray-700">
+                  <p className="text-sm text-foreground">
                     {recommendation}
                   </p>
                 </div>
@@ -96,11 +96,11 @@ export function RiskCard({
           </div>
 
           {/* Right Side - Citation */}
-          <div className="w-72 rounded-lg border border-gray-200 bg-white p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+          <div className="w-72 rounded-lg border border-border bg-card p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
               Regulatory Citation
             </p>
-            <p className="text-sm font-medium text-gray-900 mb-2">
+            <p className="text-sm font-medium text-foreground mb-2">
               {citation}
             </p>
             {citationLink && (
@@ -108,7 +108,7 @@ export function RiskCard({
                 href={citationLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 font-medium"
+                className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary/80 font-medium"
               >
                 View Full Document
                 <ExternalLink className="h-3 w-3" />
@@ -128,51 +128,37 @@ interface RiskCardsSectionProps {
 export function RiskCardsSection({ gaps }: RiskCardsSectionProps) {
   if (gaps.length === 0) {
     return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
+      <div className="rounded-xl border-2 border-green-500/30 bg-green-500/5 p-8 text-center">
+        <div className="mx-auto max-w-md space-y-3">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10">
+            <AlertTriangle className="h-8 w-8 text-green-600 dark:text-green-400" />
+          </div>
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              Detected Compliance Gaps
-            </h2>
-            <p className="text-sm text-gray-500">
-              Issues requiring immediate attention
+            <h3 className="text-lg font-semibold text-foreground">
+              No Compliance Gaps Detected
+            </h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              All obligations are properly addressed. Your product appears to be fully compliant with BNM AML/CFT regulations.
             </p>
           </div>
         </div>
-        <Card className="border-2 border-green-200 bg-green-50">
-          <CardContent className="p-6 text-center">
-            <p className="text-sm font-medium text-green-800">
-              ✅ No compliance gaps detected! All obligations are properly addressed.
-            </p>
-          </CardContent>
-        </Card>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900">
-            Detected Compliance Gaps
-          </h2>
-          <p className="text-sm text-gray-500">
-            {gaps.length} {gaps.length === 1 ? 'issue' : 'issues'} requiring attention
-          </p>
+      {gaps.map((gap, index) => (
+        <div key={gap.gap_id}>
+          <RiskCard
+            title={gap.regulation.name}
+            detectedGap={gap.gap_description}
+            citation={gap.citation}
+            citationLink={undefined}
+            severity={gap.severity}
+            recommendation={gap.recommendation}
+          />
         </div>
-      </div>
-
-      {gaps.map((gap) => (
-        <RiskCard
-          key={gap.gap_id}
-          title={gap.regulation.name}
-          detectedGap={gap.gap_description}
-          citation={gap.citation}
-          citationLink={undefined}
-          severity={gap.severity}
-          recommendation={gap.recommendation}
-        />
       ))}
     </div>
   );
