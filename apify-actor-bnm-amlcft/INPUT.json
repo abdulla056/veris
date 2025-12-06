@@ -1,0 +1,15 @@
+{
+  "startUrls": [
+    { "url": "https://amlcft.bnm.gov.my/the-amla" }
+  ],
+  "maxPdfsToDownload": 10,
+  "extractFullText": true,
+  "followLinks": true,
+  "maxCrawlDepth": 2,
+  "pdfKeywords": [],
+  "processWithClaude": true,
+  "anthropicApiKey": "",
+  "uploadToConvex": true,
+  "convexUrl": "https://diligent-cardinal-39.convex.cloud"
+}
+

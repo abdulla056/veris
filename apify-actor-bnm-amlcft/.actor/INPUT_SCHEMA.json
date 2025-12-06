@@ -1,0 +1,77 @@
+{
+  "title": "BNM AML/CFT Compliance Extractor",
+  "description": "Downloads PDFs from Bank Negara Malaysia AML/CFT website and extracts structured compliance data using Claude AI",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "startUrls": {
+      "title": "Start URLs",
+      "type": "array",
+      "description": "URLs to scrape for PDF links",
+      "editor": "requestListSources",
+      "default": [
+        {
+          "url": "https://amlcft.bnm.gov.my/the-amla"
+        }
+      ]
+    },
+    "maxPdfsToDownload": {
+      "title": "Max PDFs to Download",
+      "type": "integer",
+      "description": "Maximum number of PDFs to download. Set to 0 for unlimited.",
+      "default": 0,
+      "minimum": 0
+    },
+    "followLinks": {
+      "title": "Follow Links",
+      "type": "boolean",
+      "description": "Follow links to find more PDFs on sub-pages",
+      "default": false
+    },
+    "maxCrawlDepth": {
+      "title": "Max Crawl Depth",
+      "type": "integer",
+      "description": "How deep to follow links",
+      "default": 1,
+      "minimum": 1,
+      "maximum": 3
+    },
+    "pdfKeywords": {
+      "title": "PDF Keywords Filter",
+      "type": "array",
+      "description": "Only download PDFs with link text containing these keywords. Leave empty to download all.",
+      "editor": "stringList",
+      "default": []
+    },
+    "processWithClaude": {
+      "title": "Process with Claude AI",
+      "type": "boolean",
+      "description": "Extract structured compliance data from PDFs using Claude AI",
+      "default": true,
+      "sectionCaption": "Claude AI Settings",
+      "sectionDescription": "Configure Claude AI for compliance extraction"
+    },
+    "anthropicApiKey": {
+      "title": "Anthropic API Key",
+      "type": "string",
+      "description": "Your Anthropic API key for Claude. Get one at https://console.anthropic.com/",
+      "editor": "textfield",
+      "isSecret": true
+    },
+    "uploadToConvex": {
+      "title": "Upload to Convex Database",
+      "type": "boolean",
+      "description": "Upload extracted compliance data to your Convex database",
+      "default": true,
+      "sectionCaption": "Convex Database Settings",
+      "sectionDescription": "Configure Convex database for storing compliance data"
+    },
+    "convexUrl": {
+      "title": "Convex Deployment URL",
+      "type": "string",
+      "description": "Your Convex deployment URL (e.g., https://your-project.convex.cloud). Find it in your Convex dashboard.",
+      "editor": "textfield"
+    }
+  },
+  "required": []
+}
